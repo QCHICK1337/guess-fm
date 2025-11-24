@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Guess FM</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Guess FM</h1>
+    </header>
+    <main>
+      <div id="search-container">
+        <input
+          id="artist-input"
+          placeholder="Enter artist name"
+          aria-label="Artist Name"
+        />
+        <button id="search-btn" type="button">Search</button>
+      </div>
+      <div id="game-container">
+        <audio id="audio-player" controls></audio>
+        <input
+          id="guess-input"
+          placeholder="Guess the song..."
+          aria-label="Song Title Guess"
+        />
+        <button id="submit-btn" type="button">Guess</button>
+        <p id="feedback-txt"></p>
+      </div>
+    </main>
+    <script src="app.js"></script>
+  </body>
+</html>
