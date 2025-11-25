@@ -20,6 +20,14 @@ main {
   gap: 2rem;
 }
 
+input,
+button {
+  padding: 12px;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
 .control-container {
   display: flex;
   flex-direction: column;
@@ -27,10 +35,6 @@ main {
   width: 100%;
 }
 
-input,
-button {
-  padding: 12px;
-  font-size: 1rem;
-  border-radius: 8px;
-  border: 1px solid #ccc;
+#game-container {
+  display: none;
 }
