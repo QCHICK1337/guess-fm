@@ -8,12 +8,14 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   min-height: 100vh;
 }
 
 main {
-  max-width: 500px;
+  width: 100%;
+  max-width: min(90%, 600px);
+  margin-top: 20vh;
+  margin-bottom: auto;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -26,12 +28,18 @@ button {
   font-size: 1rem;
   border-radius: 8px;
   border: 1px solid #ccc;
+  text-align: center;
+  width: 100%;
 }
 
 header {
   display: flex;
   align-items: center;
   gap: 10px;
+}
+
+audio {
+  width: 100%;
 }
 
 .control-container {

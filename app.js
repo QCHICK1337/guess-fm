@@ -1,3 +1,4 @@
+const introSection = document.getElementById("intro-section");
 const searchBtn = document.getElementById("search-btn");
 const searchInput = document.getElementById("artist-input");
 const gameContainer = document.getElementById("game-container");
@@ -46,6 +47,8 @@ searchBtn.addEventListener("click", () => {
       });
 
       playRandomSong();
+
+      introSection.style.display = "none";
       searchInput.style.display = "none";
       searchBtn.style.display = "none";
       gameContainer.style.display = "flex";
@@ -64,7 +67,7 @@ submitBtn.addEventListener("click", () => {
     currentSong.trackName.toLowerCase().trim()
   ) {
     feedbackTxt.textContent = "Correct!";
-    nextBtn.style.display = "flex";
+    nextBtn.style.display = "block";
   } else {
     feedbackTxt.textContent = "Wrong!";
   }
