@@ -50,6 +50,15 @@ audio {
 }
 
 #game-container,
-#next-btn {
+#next-btn,
+#album-art,
+#song-title,
+#song-artist {
   display: none;
+}
+
+#album-art {
+  width: 60%;
+  margin: 0 auto;
+  border-radius: 8px;
 }

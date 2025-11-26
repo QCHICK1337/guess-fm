@@ -7,6 +7,9 @@ const guessInput = document.getElementById("guess-input");
 const songSuggestions = document.getElementById("song-suggestions");
 const submitBtn = document.getElementById("submit-btn");
 const feedbackTxt = document.getElementById("feedback-txt");
+const albumArt = document.getElementById("album-art");
+const songArtistTxt = document.getElementById("song-artist");
+const songTitleTxt = document.getElementById("song-title");
 const nextBtn = document.getElementById("next-btn");
 
 let currentSong = null;
@@ -22,6 +25,33 @@ function playRandomSong() {
 
   audioPlayer.src = currentSong.previewUrl;
   audioPlayer.play();
+}
+
+function setupRoundUi() {
+  albumArt.style.display = "none";
+  songArtistTxt.style.display = "none";
+  songTitleTxt.style.display = "none";
+  nextBtn.style.display = "none";
+
+  guessInput.style.display = "block";
+  submitBtn.style.display = "block";
+
+  feedbackTxt.textContent = "";
+  guessInput.value = "";
+}
+
+function setupWinUi() {
+  albumArt.src = currentSong.artworkUrl100.replace("100x100", "600x600");
+  songArtistTxt.textContent = currentSong.artistName;
+  songTitleTxt.textContent = currentSong.trackName;
+
+  guessInput.style.display = "none";
+  submitBtn.style.display = "none";
+
+  songArtistTxt.style.display = "block";
+  albumArt.style.display = "block";
+  songTitleTxt.style.display = "block";
+  nextBtn.style.display = "block";
 }
 
 searchBtn.addEventListener("click", () => {
@@ -60,22 +90,27 @@ searchBtn.addEventListener("click", () => {
     });
 });
 
+searchInput.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    searchBtn.click();
+  }
+});
+
 submitBtn.addEventListener("click", () => {
   const userGuess = guessInput.value;
+
   if (
     userGuess.toLowerCase().trim() ===
     currentSong.trackName.toLowerCase().trim()
   ) {
     feedbackTxt.textContent = "Correct!";
-    nextBtn.style.display = "block";
+    setupWinUi();
   } else {
-    feedbackTxt.textContent = "Wrong!";
+    feedbackTxt.textContent = "Wrong! Try again.";
   }
 });
 
 nextBtn.addEventListener("click", () => {
+  setupRoundUi();
   playRandomSong();
-  nextBtn.style.display = "none";
-  feedbackTxt.textContent = "";
-  guessInput.value = "";
 });
