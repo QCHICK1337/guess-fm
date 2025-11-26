@@ -28,6 +28,12 @@ button {
   border: 1px solid #ccc;
 }
 
+header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .control-container {
   display: flex;
   flex-direction: column;
