@@ -63,7 +63,7 @@ searchBtn.addEventListener("click", () => {
     return;
   }
 
-  const url = `https://itunes.apple.com/search?term=${artistName}&media=music&entity=song&limit=25`;
+  const url = `https://itunes.apple.com/search?term=${artistName}&media=music&entity=song&limit=50`;
 
   fetch(url)
     .then((response) => response.json())
@@ -88,7 +88,15 @@ searchBtn.addEventListener("click", () => {
       artistHeader.textContent = bestMatch.artistName;
       songSuggestions.innerHTML = "";
 
+      const seenTitles = new Set();
+
       allSongs.forEach((song) => {
+        if (seenTitles.has(song.trackName)) {
+          return;
+        } else {
+          seenTitles.add(song.trackName);
+        }
+
         const songSuggestionOption = document.createElement("option");
         songSuggestionOption.value = song.trackName;
         songSuggestions.appendChild(songSuggestionOption);
