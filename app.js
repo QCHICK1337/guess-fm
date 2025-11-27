@@ -2,6 +2,7 @@ const introSection = document.getElementById("intro-section");
 const searchBtn = document.getElementById("search-btn");
 const searchInput = document.getElementById("artist-input");
 const gameContainer = document.getElementById("game-container");
+const artistHeader = document.getElementById("current-artist-header");
 const audioPlayer = document.getElementById("audio-player");
 const guessInput = document.getElementById("guess-input");
 const songSuggestions = document.getElementById("song-suggestions");
@@ -67,9 +68,26 @@ searchBtn.addEventListener("click", () => {
   fetch(url)
     .then((response) => response.json())
     .then((data) => {
-      allSongs = data.results;
+      allSongs = data.results.filter((song) => {
+        return song.artistName.toLowerCase().includes(artistName.toLowerCase());
+      });
 
+      if (allSongs.length === 0) {
+        alert("No songs found for that artist!");
+        return;
+      }
+
+      const bestMatch = allSongs.reduce((shortestSoFar, current) => {
+        if (shortestSoFar.artistName.length > current.artistName.length) {
+          return current;
+        } else {
+          return shortestSoFar;
+        }
+      });
+
+      artistHeader.textContent = bestMatch.artistName;
       songSuggestions.innerHTML = "";
+
       allSongs.forEach((song) => {
         const songSuggestionOption = document.createElement("option");
         songSuggestionOption.value = song.trackName;
@@ -86,7 +104,7 @@ searchBtn.addEventListener("click", () => {
     })
     .catch((error) => {
       console.error("Error fetching data:", error);
-      alert("Error fetching data:", error);
+      alert("Error fetching data:" + error);
     });
 });
 
