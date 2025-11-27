@@ -63,7 +63,7 @@ searchBtn.addEventListener("click", () => {
     return;
   }
 
-  const url = `https://itunes.apple.com/search?term=${artistName}&media=music&entity=song&limit=50`;
+  const url = `https://itunes.apple.com/search?term=${artistName}&media=music&entity=song&limit=50&attribute=artistTerm`;
 
   fetch(url)
     .then((response) => response.json())
