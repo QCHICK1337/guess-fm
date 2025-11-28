@@ -63,29 +63,31 @@ searchBtn.addEventListener("click", () => {
     return;
   }
 
-  const url = `https://itunes.apple.com/search?term=${artistName}&media=music&entity=song&limit=50&attribute=artistTerm`;
+  const url = `https://itunes.apple.com/search?term=${artistName}&entity=musicArtist&limit=1`;
 
   fetch(url)
     .then((response) => response.json())
     .then((data) => {
-      allSongs = data.results.filter((song) => {
-        return song.artistName.toLowerCase().includes(artistName.toLowerCase());
+      if (data.results.length === 0) {
+        alert("Artist not found!");
+        return;
+      }
+      const artistId = data.results[0].artistId;
+      artistHeader.textContent = data.results[0].artistName;
+
+      const songLookupUrl = `https://itunes.apple.com/lookup?id=${artistId}&entity=song&limit=100`;
+      return fetch(songLookupUrl).then((res) => res.json());
+    })
+    .then((songData) => {
+      allSongs = songData.results.filter((item) => {
+        return item.wrapperType === "track" && item.previewUrl;
       });
 
       if (allSongs.length === 0) {
-        alert("No songs found for that artist!");
+        alert("No playable songs found!");
         return;
       }
 
-      const bestMatch = allSongs.reduce((shortestSoFar, current) => {
-        if (shortestSoFar.artistName.length > current.artistName.length) {
-          return current;
-        } else {
-          return shortestSoFar;
-        }
-      });
-
-      artistHeader.textContent = bestMatch.artistName;
       songSuggestions.innerHTML = "";
 
       const seenTitles = new Set();
@@ -93,27 +95,24 @@ searchBtn.addEventListener("click", () => {
       allSongs.forEach((song) => {
         if (seenTitles.has(song.trackName)) {
           return;
-        } else {
-          seenTitles.add(song.trackName);
         }
 
-        const songSuggestionOption = document.createElement("option");
-        songSuggestionOption.value = song.trackName;
-        songSuggestions.appendChild(songSuggestionOption);
-      });
+        seenTitles.add(song.trackName);
 
-      playRandomSong();
+        const option = document.createElement("option");
+        option.value = song.trackName;
+
+        songSuggestions.appendChild(option);
+      });
 
       introSection.style.display = "none";
       searchInput.style.display = "none";
       searchBtn.style.display = "none";
       gameContainer.style.display = "flex";
-      guessInput.focus();
+
+      playRandomSong();
     })
-    .catch((error) => {
-      console.error("Error fetching data:", error);
-      alert("Error fetching data:" + error);
-    });
+    .catch((error) => console.error(error));
 });
 
 searchInput.addEventListener("keydown", (event) => {

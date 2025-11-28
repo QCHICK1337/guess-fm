@@ -13,16 +13,19 @@
       rel="stylesheet"
     />
   </head>
+
   <body>
     <header>
-      <img src="logo.svg" width="40" />
+      <img src="logo.svg" width="40" alt="Guess FM Logo" />
       <h1>Guess FM</h1>
     </header>
+
     <main>
       <section id="intro-section">
         <h2>Test your music knowledge</h2>
         <p>Search for an artist, listen to a snippet, and guess the song.</p>
       </section>
+
       <div id="search-container" class="control-container">
         <input
           id="artist-input"
@@ -31,6 +34,7 @@
         />
         <button id="search-btn" type="button">Search</button>
       </div>
+
       <div id="game-container" class="control-container">
         <h3 id="current-artist-header"></h3>
         <audio id="audio-player" controls></audio>
@@ -49,6 +53,7 @@
         <button id="next-btn">Next song</button>
       </div>
     </main>
+
     <script src="app.js"></script>
   </body>
 </html>
