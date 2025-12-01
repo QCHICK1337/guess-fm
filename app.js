@@ -75,7 +75,7 @@ searchBtn.addEventListener("click", () => {
       const artistId = data.results[0].artistId;
       artistHeader.textContent = data.results[0].artistName;
 
-      const songLookupUrl = `https://itunes.apple.com/lookup?id=${artistId}&entity=song&limit=100`;
+      const songLookupUrl = `https://itunes.apple.com/lookup?id=${artistId}&entity=song&limit=200`;
       return fetch(songLookupUrl).then((res) => res.json());
     })
     .then((songData) => {
