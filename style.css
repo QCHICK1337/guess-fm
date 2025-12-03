@@ -1,3 +1,5 @@
+/* COLOR VARIABLES */
+
 :root {
   --main-color: #1ed760;
   --hover-state: #1fdf64;
@@ -75,6 +77,27 @@ header {
 
 audio {
   width: 100%;
+}
+
+footer {
+  margin-top: 2rem;
+  padding-bottom: 1rem;
+  font-size: 0.85rem;
+  color: var(--secondary-text-color);
+}
+
+footer a {
+  color: var(--secondary-text-color);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+footer a:hover {
+  color: var(--main-color);
+}
+
+footer i {
+  margin-right: 3px;
 }
 
 .control-container {
