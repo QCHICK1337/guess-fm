@@ -107,6 +107,15 @@ i {
   width: 100%;
 }
 
+.button-container {
+  display: flex;
+  gap: 15px;
+}
+
+#skip-btn {
+  width: 30%;
+}
+
 #game-container,
 #next-btn,
 #album-art,

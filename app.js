@@ -7,6 +7,7 @@ const audioPlayer = document.getElementById("audio-player");
 const guessInput = document.getElementById("guess-input");
 const songSuggestions = document.getElementById("song-suggestions");
 const submitBtn = document.getElementById("submit-btn");
+const skipBtn = document.getElementById("skip-btn");
 const feedbackTxt = document.getElementById("feedback-txt");
 const albumArt = document.getElementById("album-art");
 const songArtistTxt = document.getElementById("song-artist");
@@ -37,6 +38,7 @@ function setupRoundUi() {
 
   guessInput.style.display = "block";
   submitBtn.style.display = "block";
+  skipBtn.style.display = "block";
 
   feedbackTxt.textContent = "";
   guessInput.value = "";
@@ -49,6 +51,7 @@ function setupWinUi() {
 
   guessInput.style.display = "none";
   submitBtn.style.display = "none";
+  skipBtn.style.display = "none";
 
   songArtistTxt.style.display = "block";
   albumArt.style.display = "block";
@@ -144,5 +147,10 @@ submitBtn.addEventListener("click", () => {
 
 nextBtn.addEventListener("click", () => {
   setupRoundUi();
+  playRandomSong();
+});
+
+skipBtn.addEventListener("click", () => {
+  feedbackTxt.textContent = "";
   playRandomSong();
 });
