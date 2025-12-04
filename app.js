@@ -70,7 +70,9 @@ searchBtn.addEventListener("click", () => {
   searchBtn.disabled = true;
   searchBtn.innerHTML = '<i class="fa-solid fa-spinner"></i>Loading...';
 
-  const url = `https://itunes.apple.com/search?term=${artistName}&entity=musicArtist&limit=1`;
+  const url = `https://itunes.apple.com/search?term=${encodeURIComponent(
+    artistName
+  )}&entity=musicArtist&limit=1`;
 
   fetch(url)
     .then((response) => response.json())
