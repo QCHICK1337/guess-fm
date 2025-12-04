@@ -12,6 +12,7 @@ const albumArt = document.getElementById("album-art");
 const songArtistTxt = document.getElementById("song-artist");
 const songTitleTxt = document.getElementById("song-title");
 const nextBtn = document.getElementById("next-btn");
+const searchIcon = document.getElementById("search-icon");
 
 let currentSong = null;
 let allSongs = [];
@@ -63,6 +64,9 @@ searchBtn.addEventListener("click", () => {
     return;
   }
 
+  searchBtn.disabled = true;
+  searchBtn.innerHTML = '<i class="fa-solid fa-spinner"></i>Loading...';
+
   const url = `https://itunes.apple.com/search?term=${artistName}&entity=musicArtist&limit=1`;
 
   fetch(url)
@@ -110,6 +114,9 @@ searchBtn.addEventListener("click", () => {
       searchBtn.style.display = "none";
       gameContainer.style.display = "flex";
 
+      searchBtn.disabled = false;
+      searchBtn.innerHTML =
+        '<i class="fa-solid fa-magnifying-glass"></i>Search';
       playRandomSong();
     })
     .catch((error) => console.error(error));

@@ -32,7 +32,9 @@
           placeholder="Enter artist name"
           aria-label="Artist Name"
         />
-        <button id="search-btn" type="button">Search</button>
+        <button id="search-btn" type="button">
+          <i class="fa-solid fa-magnifying-glass" id="search-icon"></i>Search
+        </button>
       </div>
 
       <div id="game-container" class="control-container">
@@ -45,12 +47,16 @@
           list="song-suggestions"
         />
         <datalist id="song-suggestions"></datalist>
-        <button id="submit-btn" type="button">Submit Guess</button>
+        <button id="submit-btn" type="button">
+          <i class="fa-solid fa-check"></i>Submit Guess
+        </button>
         <p id="feedback-txt"></p>
         <img id="album-art" alt="Album Cover" />
         <p id="song-artist"></p>
         <p id="song-title"></p>
-        <button id="next-btn">Next song</button>
+        <button id="next-btn">
+          <i class="fa-solid fa-angles-right"></i>Next song
+        </button>
       </div>
     </main>
 
