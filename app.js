@@ -31,32 +31,26 @@ function playRandomSong() {
 }
 
 function setupRoundUi() {
-  albumArt.style.display = "none";
-  songArtistTxt.style.display = "none";
-  songTitleTxt.style.display = "none";
-  nextBtn.style.display = "none";
-
-  guessInput.style.display = "block";
-  submitBtn.style.display = "block";
-  skipBtn.style.display = "block";
+  setDisplay([guessInput, submitBtn, skipBtn], "block");
+  setDisplay([albumArt, songArtistTxt, songTitleTxt, nextBtn], "none");
 
   feedbackTxt.textContent = "";
   guessInput.value = "";
 }
 
 function setupWinUi() {
+  setDisplay([songArtistTxt, albumArt, songTitleTxt, nextBtn], "block");
+  setDisplay([guessInput, submitBtn, skipBtn], "none");
+
   albumArt.src = currentSong.artworkUrl100.replace("100x100", "600x600");
   songArtistTxt.textContent = currentSong.artistName;
   songTitleTxt.textContent = currentSong.trackName;
+}
 
-  guessInput.style.display = "none";
-  submitBtn.style.display = "none";
-  skipBtn.style.display = "none";
-
-  songArtistTxt.style.display = "block";
-  albumArt.style.display = "block";
-  songTitleTxt.style.display = "block";
-  nextBtn.style.display = "block";
+function setDisplay(elements, displayValue) {
+  elements.forEach((element) => {
+    element.style.display = displayValue;
+  });
 }
 
 searchBtn.addEventListener("click", () => {
@@ -114,14 +108,13 @@ searchBtn.addEventListener("click", () => {
         songSuggestions.appendChild(option);
       });
 
-      introSection.style.display = "none";
-      searchInput.style.display = "none";
-      searchBtn.style.display = "none";
-      gameContainer.style.display = "flex";
+      setDisplay([gameContainer], "flex");
+      setDisplay([introSection, searchInput, searchBtn], "none");
 
       searchBtn.disabled = false;
       searchBtn.innerHTML =
         '<i class="fa-solid fa-magnifying-glass"></i>Search';
+
       playRandomSong();
     })
     .catch((error) => console.error(error));
