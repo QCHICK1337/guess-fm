@@ -1,6 +1,7 @@
 const introSection = document.getElementById("intro-section");
 const searchBtn = document.getElementById("search-btn");
 const searchInput = document.getElementById("artist-input");
+const statusMsg = document.getElementById("status-msg");
 const gameContainer = document.getElementById("game-container");
 const artistHeader = document.getElementById("current-artist-header");
 const audioPlayer = document.getElementById("audio-player");
@@ -53,11 +54,24 @@ function setDisplay(elements, displayValue) {
   });
 }
 
+function setStatus(message, type) {
+  statusMsg.classList.remove("is-info", "is-error", "is-success", "is-hidden");
+
+  if (message === "") {
+    statusMsg.textContent = "";
+    statusMsg.classList.add("is-hidden");
+    return;
+  }
+
+  statusMsg.textContent = message;
+  statusMsg.classList.add(`is-${type}`);
+}
+
 searchBtn.addEventListener("click", () => {
   const artistName = searchInput.value;
 
   if (artistName === "") {
-    alert("Please enter an artist");
+    setStatus("Please enter an artist", "error");
     return;
   }
 
@@ -72,7 +86,7 @@ searchBtn.addEventListener("click", () => {
     .then((response) => response.json())
     .then((data) => {
       if (data.results.length === 0) {
-        alert("Artist not found!");
+        setStatus("Artist not found", "error");
         return;
       }
       const artistId = data.results[0].artistId;
@@ -87,7 +101,7 @@ searchBtn.addEventListener("click", () => {
       });
 
       if (allSongs.length === 0) {
-        alert("No playable songs found!");
+        setStatus("No playable songs found", "error");
         return;
       }
 
@@ -116,6 +130,7 @@ searchBtn.addEventListener("click", () => {
         '<i class="fa-solid fa-magnifying-glass"></i>Search';
 
       playRandomSong();
+      setStatus("", "");
     })
     .catch((error) => console.error(error));
 });

@@ -7,7 +7,25 @@
   --component-bg-color: #181818;
   --text-color: #ffffff;
   --secondary-text-color: #b3b3b3;
+  --error-color: #f87171;
   --border-color: #282828;
+}
+
+/* VARIANT CLASSES */
+.is-hidden {
+  display: none;
+}
+
+.is-info {
+  color: var(--secondary-text-color);
+}
+
+.is-error {
+  color: var(--error-color);
+}
+
+.is-success {
+  color: var(--main-color);
 }
 
 * {
@@ -110,6 +128,10 @@ i {
 .button-container {
   display: flex;
   gap: 15px;
+}
+
+#status-msg {
+  font-size: 0.85rem;
 }
 
 #skip-btn {
