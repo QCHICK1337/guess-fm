@@ -18,17 +18,38 @@ const searchIcon = document.getElementById("search-icon");
 
 let currentSong = null;
 let allSongs = [];
+let playHistory = [];
 
 audioPlayer.volume = 0.5;
+
+function getUnplayedSong() {
+  if (playHistory.length === allSongs.length) {
+    setStatus("All songs played - game restarted", "info");
+    playHistory = [];
+  }
+
+  let randomIndex = Math.floor(Math.random() * allSongs.length);
+  let pick = allSongs[randomIndex];
+
+  while (playHistory.includes(pick.trackId)) {
+    randomIndex = Math.floor(Math.random() * allSongs.length);
+    pick = allSongs[randomIndex];
+  }
+
+  playHistory.push(pick.trackId);
+
+  return pick;
+}
 
 function playRandomSong() {
   audioPlayer.pause();
 
-  const randomIndex = Math.floor(Math.random() * allSongs.length);
-  currentSong = allSongs[randomIndex];
-
+  currentSong = getUnplayedSong();
   audioPlayer.src = currentSong.previewUrl;
-  audioPlayer.play();
+
+  audioPlayer.play().catch(() => {
+    setStatus("Click play to start audio", "info");
+  });
 }
 
 function setupRoundUi() {
