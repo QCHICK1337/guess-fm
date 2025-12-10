@@ -24,7 +24,13 @@ let currentSong = null;
 let allSongs = [];
 let playHistory = [];
 
-audioPlayer.volume = 0.5;
+// PLYR SETUP
+
+const player = new Plyr(audioPlayer, {
+  controls: ["play", "progress", "current-time", "mute", "volume"],
+});
+
+player.volume = 0.5;
 
 // UTILITY FUNCTIONS
 
@@ -73,12 +79,12 @@ function getUnplayedSong() {
 
 // Plays a random unplayed song
 function playRandomSong() {
-  audioPlayer.pause();
+  player.pause();
 
   currentSong = getUnplayedSong();
   audioPlayer.src = currentSong.previewUrl;
 
-  audioPlayer.play().catch(() => {
+  player.play().catch(() => {
     setStatus("Click play to start audio", "info");
   });
 }

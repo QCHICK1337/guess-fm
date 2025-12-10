@@ -172,3 +172,20 @@ audio {
 #song-artist {
   display: none;
 }
+
+/* ========================================
+   PLYR CUSTOMIZATION
+   ======================================== */
+
+.plyr {
+  --plyr-color-main: var(--main-color);
+  --plyr-audio-controls-background: var(--bg-color);
+  --plyr-audio-control-color: var(--secondary-text-color);
+}
+
+.plyr--audio {
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
