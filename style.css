@@ -4,7 +4,7 @@
 
 :root {
   --main-color: #1ed760;
-  --hover-state: #1fdf64;
+  --hover-state: #20ee6c;
   --bg-color: #0a0a0a;
   --component-bg-color: #181818;
   --text-color: #ffffff;
@@ -97,10 +97,21 @@ button {
   border: none;
   cursor: pointer;
   color: var(--bg-color);
+  transition: all 0.3s;
 }
 
 button:hover {
   background-color: var(--hover-state);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
+}
+
+.btn-secondary:hover {
+  background-color: var(--border-color);
 }
 
 /* ========================================
