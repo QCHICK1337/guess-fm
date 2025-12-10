@@ -4,7 +4,7 @@ Guess FM is a web-based music quiz game that challenges your knowledge of songs 
 
 ## Live Demo
 
-Try it out online: [Guess FM on GitHub Pages](https://qchick1337.github.io/guess-fm/) _(coming soon!)_
+Try it out online: [Guess FM on GitHub Pages](https://qchick1337.github.io/guess-fm/) 
 
 ## Features
 
@@ -13,10 +13,6 @@ Try it out online: [Guess FM on GitHub Pages](https://qchick1337.github.io/guess
 - **Guessing Game:** Type your guess for the song title and get instant feedback.
 - **Skip & Next:** Skip songs or move to the next round easily.
 - **Responsive Design:** Works well on desktop and mobile devices.
-
-## Screenshots
-
-![Guess FM Screenshot](logo.svg)
 
 ## Getting Started
 
@@ -49,7 +45,7 @@ Try it out online: [Guess FM on GitHub Pages](https://qchick1337.github.io/guess
 - HTML5
 - CSS3
 - JavaScript (ES6)
-- [iTunes Search API](https://affiliate.itunes.apple.com/resources/documentation/itunes-store-web-service-search-api/)
+- [iTunes Search API](https://performance-partners.apple.com/search-api)
 - [Font Awesome](https://fontawesome.com/)
 
 ## Project Structure
