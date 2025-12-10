@@ -6,6 +6,8 @@
     <title>Guess FM</title>
     <link rel="icon" type="image/svg+xml" href="logo.svg" />
     <link rel="stylesheet" href="style.css" />
+
+    <!-- Google Fonts: Open Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -15,39 +17,58 @@
   </head>
 
   <body>
+    <!-- Main Header -->
     <header>
       <img src="logo.svg" width="40" alt="Guess FM Logo" />
       <h1>Guess FM</h1>
     </header>
 
+    <!-- Main Content -->
     <main>
+      <!-- Introduction Section -->
       <section id="intro-section">
         <h2>Test your music knowledge</h2>
         <p>Search for an artist, listen to a snippet, and guess the song.</p>
       </section>
 
-      <div id="search-container" class="control-container">
+      <!-- Artist Search Form -->
+      <form id="search-container" class="control-container">
         <input
           id="artist-input"
+          type="text"
           placeholder="Enter artist name"
           aria-label="Artist Name"
+          required
         />
         <button id="search-btn" type="button">
           <i class="fa-solid fa-magnifying-glass" id="search-icon"></i>Search
         </button>
-        <p id="status-msg" class="is-hidden" aria-live="polite"></p>
-      </div>
+        <p
+          id="status-msg"
+          class="is-hidden"
+          aria-live="polite"
+          aria-atomic="true"
+        ></p>
+      </form>
 
+      <!-- Game Interface -->
       <div id="game-container" class="control-container">
         <h3 id="current-artist-header"></h3>
+
+        <!-- Audio Player -->
         <audio id="audio-player" controls></audio>
+
+        <!-- Song Guess Input -->
         <input
           id="guess-input"
+          type="text"
           placeholder="Guess the song..."
           aria-label="Song Title Guess"
           list="song-suggestions"
         />
         <datalist id="song-suggestions"></datalist>
+
+        <!-- Game Action Buttons -->
         <div class="button-container">
           <button id="submit-btn" type="button">
             <i class="fa-solid fa-check"></i>Submit Guess
@@ -56,25 +77,34 @@
             <i class="fa-solid fa-angles-right"></i>Skip Song
           </button>
         </div>
-        <p id="feedback-txt"></p>
-        <img id="album-art" alt="Album Cover" />
+
+        <!-- Feedback and Results -->
+        <p id="feedback-txt" aria-live="polite" aria-atomic="true"></p>
+        <img id="album-art" alt="Album artwork" />
         <p id="song-artist"></p>
         <p id="song-title"></p>
-        <button id="next-btn">
+
+        <!-- Next Button -->
+        <button id="next-btn" type="button">
           <i class="fa-solid fa-angles-right"></i>Next song
         </button>
       </div>
     </main>
 
+    <!-- Footer -->
     <footer>
       <p>
         Made by QCHICK1337 |
-        <a href="https://github.com/QCHICK1337" target="_blank" rel="noopener"
+        <a
+          href="https://github.com/QCHICK1337"
+          target="_blank"
+          rel="noopener noreferrer"
           ><i class="fa-brands fa-github"></i>GitHub</a
         >
       </p>
     </footer>
 
+    <!-- Scripts -->
     <script src="app.js"></script>
     <script
       src="https://kit.fontawesome.com/6069831745.js"

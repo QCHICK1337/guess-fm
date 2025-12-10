@@ -1,4 +1,6 @@
-/* COLOR VARIABLES */
+/* ========================================
+   VARIABLES & GLOBAL STYLES
+   ======================================== */
 
 :root {
   --main-color: #1ed760;
@@ -9,23 +11,6 @@
   --secondary-text-color: #b3b3b3;
   --error-color: #f87171;
   --border-color: #282828;
-}
-
-/* VARIANT CLASSES */
-.is-hidden {
-  display: none;
-}
-
-.is-info {
-  color: var(--secondary-text-color);
-}
-
-.is-error {
-  color: var(--error-color);
-}
-
-.is-success {
-  color: var(--main-color);
 }
 
 * {
@@ -42,6 +27,16 @@ body {
   color: var(--text-color);
 }
 
+/* ========================================
+   SEMANTIC ELEMENTS (header, main, footer)
+   ======================================== */
+
+header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 main {
   width: 100%;
   max-width: min(95%, 700px);
@@ -56,6 +51,27 @@ main {
   gap: 2rem;
   background-color: var(--component-bg-color);
 }
+
+footer {
+  margin-top: 2rem;
+  padding-bottom: 1rem;
+  font-size: 0.85rem;
+  color: var(--secondary-text-color);
+}
+
+footer a {
+  color: var(--secondary-text-color);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+footer a:hover {
+  color: var(--main-color);
+}
+
+/* ========================================
+   FORM ELEMENTS (input, button)
+   ======================================== */
 
 input,
 button {
@@ -87,36 +103,9 @@ button:hover {
   background-color: var(--hover-state);
 }
 
-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-audio {
-  width: 100%;
-}
-
-footer {
-  margin-top: 2rem;
-  padding-bottom: 1rem;
-  font-size: 0.85rem;
-  color: var(--secondary-text-color);
-}
-
-footer a {
-  color: var(--secondary-text-color);
-  text-decoration: none;
-  transition: color 0.2s;
-}
-
-footer a:hover {
-  color: var(--main-color);
-}
-
-i {
-  margin-right: 3px;
-}
+/* ========================================
+   UTILITY & LAYOUT CLASSES
+   ======================================== */
 
 .control-container {
   display: flex;
@@ -130,6 +119,38 @@ i {
   gap: 15px;
 }
 
+/* ========================================
+   STATE VARIANT CLASSES
+   ======================================== */
+
+.is-hidden {
+  display: none;
+}
+
+.is-info {
+  color: var(--secondary-text-color);
+}
+
+.is-error {
+  color: var(--error-color);
+}
+
+.is-success {
+  color: var(--main-color);
+}
+
+/* ========================================
+   ID-SPECIFIC STYLES
+   ======================================== */
+
+i {
+  margin-right: 3px;
+}
+
+audio {
+  width: 100%;
+}
+
 #status-msg {
   font-size: 0.85rem;
 }
@@ -138,16 +159,16 @@ i {
   width: 30%;
 }
 
+#album-art {
+  width: 60%;
+  margin: 0 auto;
+  border-radius: 12px;
+}
+
 #game-container,
 #next-btn,
 #album-art,
 #song-title,
 #song-artist {
   display: none;
-}
-
-#album-art {
-  width: 60%;
-  margin: 0 auto;
-  border-radius: 12px;
 }

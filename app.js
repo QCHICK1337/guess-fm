@@ -1,3 +1,5 @@
+// DOM ELEMENTS
+
 const introSection = document.getElementById("intro-section");
 const searchBtn = document.getElementById("search-btn");
 const searchInput = document.getElementById("artist-input");
@@ -16,12 +18,40 @@ const songTitleTxt = document.getElementById("song-title");
 const nextBtn = document.getElementById("next-btn");
 const searchIcon = document.getElementById("search-icon");
 
+// STATE VARIABLES
+
 let currentSong = null;
 let allSongs = [];
 let playHistory = [];
 
 audioPlayer.volume = 0.5;
 
+// UTILITY FUNCTIONS
+
+// Sets the display property for an array of elements
+function setDisplay(elements, displayValue) {
+  elements.forEach((element) => {
+    element.style.display = displayValue;
+  });
+}
+
+// Updates status message with optional styling
+function setStatus(message, type) {
+  statusMsg.classList.remove("is-info", "is-error", "is-success", "is-hidden");
+
+  if (message === "") {
+    statusMsg.textContent = "";
+    statusMsg.classList.add("is-hidden");
+    return;
+  }
+
+  statusMsg.textContent = message;
+  statusMsg.classList.add(`is-${type}`);
+}
+
+// GAME LOGIC FUNCTIONS
+
+// Returns a random song that hasn't been played yet
 function getUnplayedSong() {
   if (playHistory.length === allSongs.length) {
     setStatus("All songs played - game restarted", "info");
@@ -41,6 +71,7 @@ function getUnplayedSong() {
   return pick;
 }
 
+// Plays a random unplayed song
 function playRandomSong() {
   audioPlayer.pause();
 
@@ -52,6 +83,9 @@ function playRandomSong() {
   });
 }
 
+// UI SETUP FUNCTIONS
+
+// Resets UI for a new round
 function setupRoundUi() {
   setDisplay([guessInput, submitBtn, skipBtn], "block");
   setDisplay([albumArt, songArtistTxt, songTitleTxt, nextBtn], "none");
@@ -60,6 +94,7 @@ function setupRoundUi() {
   guessInput.value = "";
 }
 
+// Displays the correct answer and album info
 function setupWinUi() {
   setDisplay([songArtistTxt, albumArt, songTitleTxt, nextBtn], "block");
   setDisplay([guessInput, submitBtn, skipBtn], "none");
@@ -69,26 +104,12 @@ function setupWinUi() {
   songTitleTxt.textContent = currentSong.trackName;
 }
 
-function setDisplay(elements, displayValue) {
-  elements.forEach((element) => {
-    element.style.display = displayValue;
-  });
-}
+// EVENT LISTENERS
 
-function setStatus(message, type) {
-  statusMsg.classList.remove("is-info", "is-error", "is-success", "is-hidden");
+// Search button: fetch artist and populate game with their songs
+searchBtn.addEventListener("click", (event) => {
+  event.preventDefault();
 
-  if (message === "") {
-    statusMsg.textContent = "";
-    statusMsg.classList.add("is-hidden");
-    return;
-  }
-
-  statusMsg.textContent = message;
-  statusMsg.classList.add(`is-${type}`);
-}
-
-searchBtn.addEventListener("click", () => {
   const artistName = searchInput.value;
 
   if (artistName === "") {
@@ -156,12 +177,15 @@ searchBtn.addEventListener("click", () => {
     .catch((error) => console.error(error));
 });
 
+// Allow Enter key to trigger search
 searchInput.addEventListener("keydown", (event) => {
   if (event.key === "Enter") {
+    event.preventDefault();
     searchBtn.click();
   }
 });
 
+// Submit button: check user's guess against current song
 submitBtn.addEventListener("click", () => {
   const userGuess = guessInput.value;
 
@@ -176,11 +200,13 @@ submitBtn.addEventListener("click", () => {
   }
 });
 
+// Next button: move to the next round
 nextBtn.addEventListener("click", () => {
   setupRoundUi();
   playRandomSong();
 });
 
+// Skip button: skip to the next song without guessing
 skipBtn.addEventListener("click", () => {
   feedbackTxt.textContent = "";
   playRandomSong();
