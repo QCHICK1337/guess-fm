@@ -1,10 +1,14 @@
+<div align="center">
+   <img src="logo.svg" alt="Guess FM logo" width="160" />
+</div>
+
 # Guess FM
 
 Guess FM is a web-based music quiz game that challenges your knowledge of songs and artists. Search for an artist, listen to a short audio snippet, and try to guess the song title. Built with vanilla JavaScript, HTML, and CSS, it uses the iTunes API for music data and previews.
 
 ## Live Demo
 
-Try it out online: [Guess FM on GitHub Pages](https://qchick1337.github.io/guess-fm/) 
+Try it out online: [Guess FM on GitHub Pages](https://qchick1337.github.io/guess-fm/)
 
 ## Features
 
@@ -46,6 +50,7 @@ Try it out online: [Guess FM on GitHub Pages](https://qchick1337.github.io/guess
 - CSS3
 - JavaScript (ES6)
 - [iTunes Search API](https://performance-partners.apple.com/search-api)
+- [Plyr](https://plyr.io/) for the audio player UI (loaded via CDN)
 - [Font Awesome](https://fontawesome.com/)
 
 ## Project Structure
