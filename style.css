@@ -125,6 +125,15 @@ button:hover {
   width: 100%;
 }
 
+.audio-container {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  width: 100%;
+  gap: 15px;
+  margin-bottom: 3rem;
+}
+
 .button-container {
   display: flex;
   gap: 15px;
@@ -158,16 +167,19 @@ i {
   margin-right: 3px;
 }
 
-audio {
+/* audio {
   width: 100%;
-}
+} */
 
 #status-msg {
   font-size: 0.85rem;
 }
 
 #skip-btn {
-  width: 30%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1 1 30%;
 }
 
 #album-art {
@@ -192,11 +204,11 @@ audio {
   --plyr-color-main: var(--main-color);
   --plyr-audio-controls-background: var(--bg-color);
   --plyr-audio-control-color: var(--secondary-text-color);
+  flex: 1 1 70%;
 }
 
 .plyr--audio {
   border-radius: 12px;
   border: 1px solid var(--border-color);
-  margin-bottom: 1rem;
   overflow: hidden;
 }
