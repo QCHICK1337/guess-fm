@@ -55,6 +55,19 @@ function setStatus(message, type) {
   statusMsg.classList.add(`is-${type}`);
 }
 
+// Normalizes strings for comparison
+function normalize(value) {
+  if (value === null || value === undefined) return "";
+  const safe = String(value);
+  return safe
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
+    .replace(/[^\p{L}\p{N}\s]/gu, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 // GAME LOGIC FUNCTIONS
 
 // Returns a random song that hasn't been played yet
@@ -135,6 +148,9 @@ searchBtn.addEventListener("click", (event) => {
     .then((data) => {
       if (data.results.length === 0) {
         setStatus("Artist not found", "error");
+        searchBtn.disabled = false;
+        searchBtn.innerHTML =
+          '<i class="fa-solid fa-magnifying-glass"></i>Search';
         return;
       }
       const artistId = data.results[0].artistId;
@@ -144,12 +160,30 @@ searchBtn.addEventListener("click", (event) => {
       return fetch(songLookupUrl).then((res) => res.json());
     })
     .then((songData) => {
+      const normArtist = normalize(artistHeader.textContent);
       allSongs = songData.results.filter((item) => {
-        return item.wrapperType === "track" && item.previewUrl;
+        const normTitle = normalize(item.trackName);
+
+        if (item.wrapperType !== "track" || !item.previewUrl) {
+          return false;
+        }
+
+        if (
+          normTitle.includes("remix") ||
+          normTitle.includes("instrumental") ||
+          normTitle.includes(normArtist)
+        ) {
+          return false;
+        }
+
+        return true;
       });
 
       if (allSongs.length === 0) {
         setStatus("No playable songs found", "error");
+        searchBtn.disabled = false;
+        searchBtn.innerHTML =
+          '<i class="fa-solid fa-magnifying-glass"></i>Search';
         return;
       }
 
@@ -180,7 +214,12 @@ searchBtn.addEventListener("click", (event) => {
       playRandomSong();
       setStatus("", "");
     })
-    .catch((error) => console.error(error));
+    .catch((error) => {
+      console.error(error);
+      searchBtn.disabled = false;
+      searchBtn.innerHTML =
+        '<i class="fa-solid fa-magnifying-glass"></i>Search';
+    });
 });
 
 // Allow Enter key to trigger search
@@ -194,6 +233,11 @@ searchInput.addEventListener("keydown", (event) => {
 // Submit button: check user's guess against current song
 submitBtn.addEventListener("click", () => {
   const userGuess = guessInput.value;
+
+  if (userGuess.trim() === "") {
+    feedbackTxt.textContent = "Please enter a guess.";
+    return;
+  }
 
   if (
     userGuess.toLowerCase().trim() ===
