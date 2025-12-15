@@ -131,7 +131,7 @@ button:hover {
   align-items: stretch;
   width: 100%;
   gap: 15px;
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
 }
 
 .button-container {
@@ -167,9 +167,15 @@ i {
   margin-right: 3px;
 }
 
-/* audio {
-  width: 100%;
-} */
+p {
+  margin: 0;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0 0 10px;
+}
 
 #status-msg {
   font-size: 0.85rem;
@@ -194,6 +200,14 @@ i {
 #song-title,
 #song-artist {
   display: none;
+}
+
+#song-title {
+  margin-bottom: 3em;
+}
+
+#current-artist-header i {
+  color: var(--main-color);
 }
 
 /* ========================================

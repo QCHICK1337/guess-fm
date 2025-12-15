@@ -31,7 +31,9 @@
       <!-- Introduction Section -->
       <section id="intro-section">
         <h2>Test your music knowledge</h2>
-        <p>Search for an artist, listen to a snippet, and guess the song.</p>
+        <p class="is-info">
+          Search for an artist, listen to a snippet, and guess the song.
+        </p>
       </section>
 
       <!-- Artist Search Form -->
@@ -56,7 +58,10 @@
 
       <!-- Game Interface -->
       <div id="game-container" class="control-container">
-        <h3 id="current-artist-header"></h3>
+        <h3 id="current-artist-header">
+          <i class="fa-solid fa-chart-simple fa-beat"></i>
+          <span id="artist-name"></span>
+        </h3>
 
         <!-- Audio Player -->
         <div class="audio-container">
@@ -86,7 +91,7 @@
         <!-- Feedback and Results -->
         <p id="feedback-txt" aria-live="polite" aria-atomic="true"></p>
         <img id="album-art" alt="Album artwork" />
-        <p id="song-artist"></p>
+        <p id="song-artist" class="is-info"></p>
         <p id="song-title"></p>
 
         <!-- Next Button -->
@@ -111,6 +116,7 @@
 
     <!-- Scripts -->
     <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
     <script src="app.js"></script>
     <script
       src="https://kit.fontawesome.com/6069831745.js"

@@ -6,6 +6,7 @@ const searchInput = document.getElementById("artist-input");
 const statusMsg = document.getElementById("status-msg");
 const gameContainer = document.getElementById("game-container");
 const artistHeader = document.getElementById("current-artist-header");
+const artistNameTxt = document.getElementById("artist-name");
 const audioPlayer = document.getElementById("audio-player");
 const guessInput = document.getElementById("guess-input");
 const songSuggestions = document.getElementById("song-suggestions");
@@ -109,6 +110,7 @@ function setupRoundUi() {
   setDisplay([guessInput, submitBtn, skipBtn], "block");
   setDisplay([albumArt, songArtistTxt, songTitleTxt, nextBtn], "none");
 
+  feedbackTxt.classList.remove("is-success");
   feedbackTxt.textContent = "";
   guessInput.value = "";
 }
@@ -121,6 +123,8 @@ function setupWinUi() {
   albumArt.src = currentSong.artworkUrl100.replace("100x100", "600x600");
   songArtistTxt.textContent = currentSong.artistName;
   songTitleTxt.textContent = currentSong.trackName;
+
+  confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
 }
 
 // EVENT LISTENERS
@@ -154,7 +158,7 @@ searchBtn.addEventListener("click", (event) => {
         return;
       }
       const artistId = data.results[0].artistId;
-      artistHeader.textContent = data.results[0].artistName;
+      artistNameTxt.textContent = data.results[0].artistName;
 
       const songLookupUrl = `https://itunes.apple.com/lookup?id=${artistId}&entity=song&limit=200`;
       return fetch(songLookupUrl).then((res) => res.json());
@@ -244,6 +248,7 @@ submitBtn.addEventListener("click", () => {
     currentSong.trackName.toLowerCase().trim()
   ) {
     feedbackTxt.textContent = "Correct!";
+    feedbackTxt.classList.add("is-success");
     setupWinUi();
   } else {
     feedbackTxt.textContent = "Wrong! Try again.";
