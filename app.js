@@ -1,269 +1,397 @@
-// DOM ELEMENTS
+/* ========================================
+   CONFIGURATION & CONSTANTS
+   ======================================== */
 
-const introSection = document.getElementById("intro-section");
-const searchBtn = document.getElementById("search-btn");
-const searchInput = document.getElementById("artist-input");
-const statusMsg = document.getElementById("status-msg");
-const gameContainer = document.getElementById("game-container");
-const artistHeader = document.getElementById("current-artist-header");
-const artistNameTxt = document.getElementById("artist-name");
-const audioPlayer = document.getElementById("audio-player");
-const guessInput = document.getElementById("guess-input");
-const songSuggestions = document.getElementById("song-suggestions");
-const submitBtn = document.getElementById("submit-btn");
-const skipBtn = document.getElementById("skip-btn");
-const feedbackTxt = document.getElementById("feedback-txt");
-const albumArt = document.getElementById("album-art");
-const songArtistTxt = document.getElementById("song-artist");
-const songTitleTxt = document.getElementById("song-title");
-const nextBtn = document.getElementById("next-btn");
-const searchIcon = document.getElementById("search-icon");
+const CONFIG = {
+  ITUNES_API: {
+    BASE_URL: "https://itunes.apple.com",
+    ARTIST_SEARCH_LIMIT: 1,
+    SONG_LOOKUP_LIMIT: 200,
+    ARTWORK_SIZE_SMALL: "100x100",
+    ARTWORK_SIZE_LARGE: "600x600",
+  },
+  AUDIO_PLAYER: {
+    VOLUME: 0.5,
+    CONTROLS: ["play", "progress", "current-time", "mute", "volume"],
+  },
+  CONFETTI: {
+    PARTICLE_COUNT: 100,
+    SPREAD: 70,
+    ORIGIN_Y: 0.6,
+  },
+  FILTERS: {
+    EXCLUDED_KEYWORDS: ["remix", "instrumental"],
+  },
+  MESSAGES: {
+    ARTIST_REQUIRED: "Please enter an artist",
+    ARTIST_NOT_FOUND: "Artist not found",
+    NO_SONGS_FOUND: "No playable songs found",
+    LOAD_ERROR: "Failed to load songs. Please try again.",
+    PLAY_AUDIO_HINT: "Click play to start audio",
+    GAME_RESET: "All songs played - game restarted",
+    EMPTY_GUESS: "Please enter a guess.",
+    CORRECT: "Correct!",
+    INCORRECT: "Wrong! Try again.",
+  },
+};
 
-// STATE VARIABLES
+/* ========================================
+   DOM CACHE
+   ======================================== */
 
-let currentSong = null;
-let allSongs = [];
-let playHistory = [];
+const DOM = {
+  // Screen sections
+  introSection: document.getElementById("intro-section"),
+  gameContainer: document.getElementById("game-container"),
 
-// PLYR SETUP
+  // Search/Input
+  searchInput: document.getElementById("artist-input"),
+  searchBtn: document.getElementById("search-btn"),
+  statusMsg: document.getElementById("status-msg"),
 
-const player = new Plyr(audioPlayer, {
-  controls: ["play", "progress", "current-time", "mute", "volume"],
+  // Game display
+  artistHeader: document.getElementById("current-artist-header"),
+  artistNameDisplay: document.getElementById("artist-name"),
+  albumArt: document.getElementById("album-art"),
+  songArtistDisplay: document.getElementById("song-artist"),
+  songTitleDisplay: document.getElementById("song-title"),
+  feedbackDisplay: document.getElementById("feedback-txt"),
+
+  // Game controls & input
+  audioPlayer: document.getElementById("audio-player"),
+  guessInput: document.getElementById("guess-input"),
+  songSuggestions: document.getElementById("song-suggestions"),
+  submitBtn: document.getElementById("submit-btn"),
+  skipBtn: document.getElementById("skip-btn"),
+  nextBtn: document.getElementById("next-btn"),
+};
+
+/* ========================================
+   APPLICATION STATE
+   ======================================== */
+
+const gameState = {
+  currentSong: null,
+  allSongs: [],
+  playHistory: [],
+
+  reset() {
+    this.currentSong = null;
+    this.allSongs = [];
+    this.playHistory = [];
+  },
+};
+
+/* ========================================
+   AUDIO PLAYER INITIALIZATION
+   ======================================== */
+
+const audioPlayer = new Plyr(DOM.audioPlayer, {
+  controls: CONFIG.AUDIO_PLAYER.CONTROLS,
 });
 
-player.volume = 0.5;
+audioPlayer.volume = CONFIG.AUDIO_PLAYER.VOLUME;
 
-// UTILITY FUNCTIONS
+/* ========================================
+   UTILITY FUNCTIONS
+   ======================================== */
 
-// Sets the display property for an array of elements
-function setDisplay(elements, displayValue) {
+// Toggle visibility of elements
+function setVisibility(elements, displayValue) {
   elements.forEach((element) => {
     element.style.display = displayValue;
   });
 }
 
-// Updates status message with optional styling
-function setStatus(message, type) {
-  statusMsg.classList.remove("is-info", "is-error", "is-success", "is-hidden");
+// Update status message with styling
+function updateStatusMessage(message, statusType) {
+  // Remove all status classes
+  DOM.statusMsg.classList.remove(
+    "is-info",
+    "is-error",
+    "is-success",
+    "is-hidden"
+  );
 
+  // Hide and clear if empty message
   if (message === "") {
-    statusMsg.textContent = "";
-    statusMsg.classList.add("is-hidden");
+    DOM.statusMsg.classList.add("is-hidden");
+    DOM.statusMsg.textContent = "";
     return;
   }
 
-  statusMsg.textContent = message;
-  statusMsg.classList.add(`is-${type}`);
+  // Show message with appropriate styling
+  DOM.statusMsg.textContent = message;
+  if (statusType) {
+    DOM.statusMsg.classList.add(`is-${statusType}`);
+  }
 }
 
-// Normalizes strings for comparison
-function normalize(value) {
+// Normalize strings for comparison (case/accent/punctuation insensitive)
+function normalizeText(value) {
   if (value === null || value === undefined) return "";
-  const safe = String(value);
-  return safe
+  return String(value)
     .toLowerCase()
     .normalize("NFD")
-    .replace(/\p{Diacritic}/gu, "")
-    .replace(/[^\p{L}\p{N}\s]/gu, "")
-    .replace(/\s+/g, " ")
+    .replace(/\p{Diacritic}/gu, "") // Remove accents
+    .replace(/[^\p{L}\p{N}\s]/gu, "") // Keep only letters, numbers, spaces
+    .replace(/\s+/g, " ") // Collapse whitespace
     .trim();
 }
 
-// GAME LOGIC FUNCTIONS
-
-// Returns a random song that hasn't been played yet
-function getUnplayedSong() {
-  if (playHistory.length === allSongs.length) {
-    setStatus("All songs played - game restarted", "info");
-    playHistory = [];
-  }
-
-  let randomIndex = Math.floor(Math.random() * allSongs.length);
-  let pick = allSongs[randomIndex];
-
-  while (playHistory.includes(pick.trackId)) {
-    randomIndex = Math.floor(Math.random() * allSongs.length);
-    pick = allSongs[randomIndex];
-  }
-
-  playHistory.push(pick.trackId);
-
-  return pick;
+// Reset search button to original state
+function resetSearchButton() {
+  DOM.searchBtn.disabled = false;
+  DOM.searchBtn.innerHTML =
+    '<i class="fa-solid fa-magnifying-glass"></i>Search';
 }
 
-// Plays a random unplayed song
-function playRandomSong() {
-  player.pause();
+// Set search button to loading state
+function setSearchButtonLoading() {
+  DOM.searchBtn.disabled = true;
+  DOM.searchBtn.innerHTML = '<i class="fa-solid fa-spinner"></i>Loading...';
+}
 
-  currentSong = getUnplayedSong();
-  audioPlayer.src = currentSong.previewUrl;
+/* ========================================
+   GAME LOGIC
+   ======================================== */
 
-  player.play().catch(() => {
-    setStatus("Click play to start audio", "info");
+// Get a random unplayed song
+function getUnplayedSong() {
+  // Reset if all songs have been played
+  if (gameState.playHistory.length === gameState.allSongs.length) {
+    updateStatusMessage(CONFIG.MESSAGES.GAME_RESET, "info");
+    gameState.playHistory = [];
+  }
+
+  // Pick a random song not yet played
+  let randomSong =
+    gameState.allSongs[Math.floor(Math.random() * gameState.allSongs.length)];
+
+  // Keep trying until we find an unplayed song
+  while (gameState.playHistory.includes(randomSong.trackId)) {
+    randomSong =
+      gameState.allSongs[Math.floor(Math.random() * gameState.allSongs.length)];
+  }
+
+  gameState.playHistory.push(randomSong.trackId);
+  return randomSong;
+}
+
+// Play the current round's song
+function playCurrentRound() {
+  audioPlayer.pause();
+  gameState.currentSong = getUnplayedSong();
+  DOM.audioPlayer.src = gameState.currentSong.previewUrl;
+
+  audioPlayer.play().catch(() => {
+    updateStatusMessage(CONFIG.MESSAGES.PLAY_AUDIO_HINT, "info");
   });
 }
 
-// UI SETUP FUNCTIONS
-
-// Resets UI for a new round
-function setupRoundUi() {
-  setDisplay([guessInput, submitBtn, skipBtn], "block");
-  setDisplay([albumArt, songArtistTxt, songTitleTxt, nextBtn], "none");
-
-  feedbackTxt.classList.remove("is-success");
-  feedbackTxt.textContent = "";
-  guessInput.value = "";
+// Check if guess matches actual song title
+function isGuessCorrect(userGuess, actualTitle) {
+  return normalizeText(userGuess) === normalizeText(actualTitle);
 }
 
-// Displays the correct answer and album info
-function setupWinUi() {
-  setDisplay([songArtistTxt, albumArt, songTitleTxt, nextBtn], "block");
-  setDisplay([guessInput, submitBtn, skipBtn], "none");
+/* ========================================
+   UI STATE MANAGEMENT
+   ======================================== */
 
-  albumArt.src = currentSong.artworkUrl100.replace("100x100", "600x600");
-  songArtistTxt.textContent = currentSong.artistName;
-  songTitleTxt.textContent = currentSong.trackName;
+// Show game round UI (input visible, results hidden)
+function showGameRoundUI() {
+  setVisibility([DOM.guessInput, DOM.submitBtn, DOM.skipBtn], "block");
+  setVisibility(
+    [DOM.albumArt, DOM.songArtistDisplay, DOM.songTitleDisplay, DOM.nextBtn],
+    "none"
+  );
 
-  confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+  DOM.feedbackDisplay.classList.remove("is-success");
+  DOM.feedbackDisplay.textContent = "";
+  DOM.guessInput.value = "";
 }
 
-// EVENT LISTENERS
+// Show results UI (answer and album visible, input hidden)
+function showResultsUI() {
+  setVisibility(
+    [DOM.songArtistDisplay, DOM.albumArt, DOM.songTitleDisplay, DOM.nextBtn],
+    "block"
+  );
+  setVisibility([DOM.guessInput, DOM.submitBtn, DOM.skipBtn], "none");
 
-// Search button: fetch artist and populate game with their songs
-searchBtn.addEventListener("click", (event) => {
-  event.preventDefault();
+  // Fetch high-resolution album art
+  const artworkUrl = gameState.currentSong.artworkUrl100.replace(
+    CONFIG.ITUNES_API.ARTWORK_SIZE_SMALL,
+    CONFIG.ITUNES_API.ARTWORK_SIZE_LARGE
+  );
 
-  const artistName = searchInput.value;
+  DOM.albumArt.src = artworkUrl;
+  DOM.songArtistDisplay.textContent = gameState.currentSong.artistName;
+  DOM.songTitleDisplay.textContent = gameState.currentSong.trackName;
 
-  if (artistName === "") {
-    setStatus("Please enter an artist", "error");
+  // Celebration effect
+  confetti({
+    particleCount: CONFIG.CONFETTI.PARTICLE_COUNT,
+    spread: CONFIG.CONFETTI.SPREAD,
+    origin: { y: CONFIG.CONFETTI.ORIGIN_Y },
+  });
+}
+
+// Show game interface, hide search screen
+function showGameScreens() {
+  setVisibility([DOM.gameContainer], "flex");
+  setVisibility([DOM.introSection, DOM.searchInput, DOM.searchBtn], "none");
+}
+
+// Show search interface, hide game screen
+function showSearchScreen() {
+  setVisibility([DOM.introSection, DOM.searchInput, DOM.searchBtn], "flex");
+  setVisibility([DOM.gameContainer], "none");
+}
+
+/* ========================================
+   API & DATA FETCHING
+   ======================================== */
+
+// Build datalist suggestions from songs
+function populateSongSuggestions(songs) {
+  DOM.songSuggestions.innerHTML = "";
+  const seenTitles = new Set();
+
+  songs.forEach((song) => {
+    // Skip duplicate song titles
+    if (seenTitles.has(song.trackName)) return;
+
+    seenTitles.add(song.trackName);
+
+    const option = document.createElement("option");
+    option.value = song.trackName;
+    DOM.songSuggestions.appendChild(option);
+  });
+}
+
+// Filter out unwanted tracks (remixes, instrumentals, etc.)
+function filterValidSongs(allTracks, artistName) {
+  const normalizedArtistName = normalizeText(artistName);
+
+  return allTracks.filter((track) => {
+    // Must be a track and have preview URL
+    if (track.wrapperType !== "track" || !track.previewUrl) return false;
+
+    const normalizedTrackName = normalizeText(track.trackName);
+
+    // Exclude remixes, instrumentals, and tracks that are artist's name
+    for (const keyword of CONFIG.FILTERS.EXCLUDED_KEYWORDS) {
+      if (normalizedTrackName.includes(keyword)) return false;
+    }
+    if (normalizedTrackName.includes(normalizedArtistName)) return false;
+
+    return true;
+  });
+}
+
+// Search for artist and load their songs from iTunes API
+async function searchAndLoadArtist(artistName) {
+  if (artistName.trim() === "") {
+    updateStatusMessage(CONFIG.MESSAGES.ARTIST_REQUIRED, "error");
     return;
   }
 
-  searchBtn.disabled = true;
-  searchBtn.innerHTML = '<i class="fa-solid fa-spinner"></i>Loading...';
+  setSearchButtonLoading();
 
-  const url = `https://itunes.apple.com/search?term=${encodeURIComponent(
-    artistName
-  )}&entity=musicArtist&limit=1`;
+  try {
+    // Search for the artist
+    const artistSearchUrl = `${
+      CONFIG.ITUNES_API.BASE_URL
+    }/search?term=${encodeURIComponent(artistName)}&entity=musicArtist&limit=${
+      CONFIG.ITUNES_API.ARTIST_SEARCH_LIMIT
+    }`;
 
-  fetch(url)
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.results.length === 0) {
-        setStatus("Artist not found", "error");
-        searchBtn.disabled = false;
-        searchBtn.innerHTML =
-          '<i class="fa-solid fa-magnifying-glass"></i>Search';
-        return;
-      }
-      const artistId = data.results[0].artistId;
-      artistNameTxt.textContent = data.results[0].artistName;
+    const artistResponse = await fetch(artistSearchUrl);
+    const artistData = await artistResponse.json();
 
-      const songLookupUrl = `https://itunes.apple.com/lookup?id=${artistId}&entity=song&limit=200`;
-      return fetch(songLookupUrl).then((res) => res.json());
-    })
-    .then((songData) => {
-      const normArtist = normalize(artistHeader.textContent);
-      allSongs = songData.results.filter((item) => {
-        const normTitle = normalize(item.trackName);
+    if (artistData.results.length === 0) {
+      updateStatusMessage(CONFIG.MESSAGES.ARTIST_NOT_FOUND, "error");
+      resetSearchButton();
+      return;
+    }
 
-        if (item.wrapperType !== "track" || !item.previewUrl) {
-          return false;
-        }
+    const artistId = artistData.results[0].artistId;
+    DOM.artistNameDisplay.textContent = artistData.results[0].artistName;
 
-        if (
-          normTitle.includes("remix") ||
-          normTitle.includes("instrumental") ||
-          normTitle.includes(normArtist)
-        ) {
-          return false;
-        }
+    // Fetch all songs by the artist
+    const songLookupUrl = `${CONFIG.ITUNES_API.BASE_URL}/lookup?id=${artistId}&entity=song&limit=${CONFIG.ITUNES_API.SONG_LOOKUP_LIMIT}`;
+    const songsResponse = await fetch(songLookupUrl);
+    const songsData = await songsResponse.json();
 
-        return true;
-      });
+    // Filter and validate songs
+    gameState.allSongs = filterValidSongs(
+      songsData.results,
+      DOM.artistNameDisplay.textContent
+    );
 
-      if (allSongs.length === 0) {
-        setStatus("No playable songs found", "error");
-        searchBtn.disabled = false;
-        searchBtn.innerHTML =
-          '<i class="fa-solid fa-magnifying-glass"></i>Search';
-        return;
-      }
+    if (gameState.allSongs.length === 0) {
+      updateStatusMessage(CONFIG.MESSAGES.NO_SONGS_FOUND, "error");
+      resetSearchButton();
+      return;
+    }
 
-      songSuggestions.innerHTML = "";
+    // Step 4: Populate suggestions and show game
+    populateSongSuggestions(gameState.allSongs);
+    showGameScreens();
+    playCurrentRound();
+    updateStatusMessage("", "");
+  } catch (error) {
+    console.error("Error loading artist:", error);
+    updateStatusMessage(CONFIG.MESSAGES.LOAD_ERROR, "error");
+    resetSearchButton();
+  }
+}
 
-      const seenTitles = new Set();
+/* ========================================
+   EVENT LISTENERS
+   ======================================== */
 
-      allSongs.forEach((song) => {
-        if (seenTitles.has(song.trackName)) {
-          return;
-        }
-
-        seenTitles.add(song.trackName);
-
-        const option = document.createElement("option");
-        option.value = song.trackName;
-
-        songSuggestions.appendChild(option);
-      });
-
-      setDisplay([gameContainer], "flex");
-      setDisplay([introSection, searchInput, searchBtn], "none");
-
-      searchBtn.disabled = false;
-      searchBtn.innerHTML =
-        '<i class="fa-solid fa-magnifying-glass"></i>Search';
-
-      playRandomSong();
-      setStatus("", "");
-    })
-    .catch((error) => {
-      console.error(error);
-      setStatus("Failed to load songs. Please try again.", "error");
-      searchBtn.disabled = false;
-      searchBtn.innerHTML =
-        '<i class="fa-solid fa-magnifying-glass"></i>Search';
-    });
+// Search when button clicked
+DOM.searchBtn.addEventListener("click", (event) => {
+  event.preventDefault();
+  searchAndLoadArtist(DOM.searchInput.value);
 });
 
-// Allow Enter key to trigger search
-searchInput.addEventListener("keydown", (event) => {
+// Allow Enter key to search
+DOM.searchInput.addEventListener("keydown", (event) => {
   if (event.key === "Enter") {
     event.preventDefault();
-    searchBtn.click();
+    DOM.searchBtn.click();
   }
 });
 
-// Submit button: check user's guess against current song
-submitBtn.addEventListener("click", () => {
-  const userGuess = guessInput.value;
+// Submit guess
+DOM.submitBtn.addEventListener("click", () => {
+  const userGuess = DOM.guessInput.value;
 
   if (userGuess.trim() === "") {
-    feedbackTxt.textContent = "Please enter a guess.";
+    DOM.feedbackDisplay.textContent = CONFIG.MESSAGES.EMPTY_GUESS;
     return;
   }
 
-  if (
-    userGuess.toLowerCase().trim() ===
-    currentSong.trackName.toLowerCase().trim()
-  ) {
-    feedbackTxt.textContent = "Correct!";
-    feedbackTxt.classList.add("is-success");
-    setupWinUi();
+  if (isGuessCorrect(userGuess, gameState.currentSong.trackName)) {
+    DOM.feedbackDisplay.textContent = CONFIG.MESSAGES.CORRECT;
+    DOM.feedbackDisplay.classList.add("is-success");
+    showResultsUI();
   } else {
-    feedbackTxt.textContent = "Wrong! Try again.";
+    DOM.feedbackDisplay.textContent = CONFIG.MESSAGES.INCORRECT;
   }
 });
 
-// Next button: move to the next round
-nextBtn.addEventListener("click", () => {
-  setupRoundUi();
-  playRandomSong();
+// Move to next round
+DOM.nextBtn.addEventListener("click", () => {
+  showGameRoundUI();
+  playCurrentRound();
 });
 
-// Skip button: skip to the next song without guessing
-skipBtn.addEventListener("click", () => {
-  feedbackTxt.textContent = "";
-  playRandomSong();
+// Skip current song
+DOM.skipBtn.addEventListener("click", () => {
+  DOM.feedbackDisplay.textContent = "";
+  playCurrentRound();
 });
