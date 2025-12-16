@@ -1,127 +1,193 @@
 /* ========================================
-   VARIABLES & GLOBAL STYLES
+   DESIGN TOKENS
    ======================================== */
 
 :root {
-  --main-color: #1ed760;
-  --hover-state: #20ee6c;
-  --bg-color: #0a0a0a;
-  --component-bg-color: #181818;
-  --text-color: #ffffff;
-  --secondary-text-color: #b3b3b3;
-  --error-color: #f87171;
-  --border-color: #282828;
+  /* Color Palette */
+  --color-primary: #1ed760;
+  --color-primary-hover: #20ee6c;
+  --color-background: #0a0a0a;
+  --color-surface: #181818;
+  --color-border: #282828;
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #b3b3b3;
+  --color-error: #f87171;
+
+  /* Spacing Scale */
+  --space-xs: 0.5rem; /* 8px */
+  --space-sm: 0.625rem; /* 10px */
+  --space-md: 0.9375rem; /* 15px */
+  --space-lg: 1.5rem; /* 24px */
+  --space-xl: 2rem; /* 32px */
+
+  /* Border Radius */
+  --radius-default: 12px;
+
+  /* Typography */
+  --font-family-base: "Open Sans", sans-serif;
+  --font-size-base: 1rem;
+  --font-size-sm: 0.85rem;
+
+  /* Transitions */
+  --transition-fast: 0.2s ease;
+  --transition-base: 0.3s ease;
+
+  /* Layout */
+  --container-max-width: 700px;
+  --container-width-mobile: 95%;
 }
 
-* {
+/* ========================================
+   BASE STYLES
+   ======================================== */
+
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
 body {
-  font-family: "Open Sans", sans-serif;
+  margin: 0;
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-base);
+  line-height: 1.5;
+  color: var(--color-text-primary);
+  background-color: var(--color-background);
   display: flex;
   flex-direction: column;
   align-items: center;
   min-height: 100vh;
-  background-color: var(--bg-color);
-  color: var(--text-color);
+}
+
+/* Typography Reset */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0 0 var(--space-sm);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+p {
+  margin: 0;
+}
+
+/* Icon Spacing */
+i {
+  margin-right: 3px;
 }
 
 /* ========================================
-   SEMANTIC ELEMENTS (header, main, footer)
+   LAYOUT
    ======================================== */
 
 header {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--space-sm);
+  margin-top: var(--space-lg);
 }
 
 main {
   width: 100%;
-  max-width: min(95%, 700px);
+  max-width: min(var(--container-width-mobile), var(--container-max-width));
   margin-top: 10vh;
   margin-bottom: auto;
-  padding: 1.5rem;
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
+  padding: var(--space-lg);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-default);
   text-align: center;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
-  background-color: var(--component-bg-color);
+  gap: var(--space-xl);
 }
 
 footer {
-  margin-top: 2rem;
+  margin-top: var(--space-xl);
   padding-bottom: 1rem;
-  font-size: 0.85rem;
-  color: var(--secondary-text-color);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
 }
 
 footer a {
-  color: var(--secondary-text-color);
-  text-decoration: none;
-  transition: color 0.2s;
+  color: var(--color-text-secondary);
+  transition: color var(--transition-fast);
 }
 
 footer a:hover {
-  color: var(--main-color);
+  color: var(--color-primary);
 }
 
 /* ========================================
-   FORM ELEMENTS (input, button)
+   FORM COMPONENTS
    ======================================== */
 
 input,
 button {
   padding: 12px;
-  font-size: 1rem;
-  border-radius: 12px;
+  font-size: var(--font-size-base);
+  border-radius: var(--radius-default);
   text-align: center;
   width: 100%;
+  font-family: inherit;
 }
 
 input {
-  background-color: var(--bg-color);
-  color: var(--text-color);
-  border: 1px solid var(--border-color);
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
+  transition: outline var(--transition-fast);
 }
 
 input:focus {
-  outline: 1px solid var(--main-color);
+  outline: 1px solid var(--color-primary);
+  outline-offset: 0;
 }
 
+/* Button Base Styles */
 button {
-  background-color: var(--main-color);
+  background-color: var(--color-primary);
+  color: var(--color-background);
   border: none;
   cursor: pointer;
-  color: var(--bg-color);
-  transition: all 0.3s;
+  font-weight: 600;
+  transition: background-color var(--transition-base);
 }
 
-button:hover {
-  background-color: var(--hover-state);
+button:hover:not(:disabled) {
+  background-color: var(--color-primary-hover);
 }
 
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Button Variants */
 .btn-secondary {
   background-color: transparent;
-  border: 1px solid var(--border-color);
-  color: var(--text-color);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
 }
 
-.btn-secondary:hover {
-  background-color: var(--border-color);
+.btn-secondary:hover:not(:disabled) {
+  background-color: var(--color-border);
 }
 
 /* ========================================
-   UTILITY & LAYOUT CLASSES
+   GAME COMPONENTS
    ======================================== */
 
+/* Container Layouts */
 .control-container {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: var(--space-sm);
   width: 100%;
 }
 
@@ -130,57 +196,25 @@ button:hover {
   justify-content: center;
   align-items: stretch;
   width: 100%;
-  gap: 15px;
-  margin-bottom: 2rem;
+  gap: var(--space-md);
+  margin-bottom: var(--space-xl);
 }
 
 .button-container {
   display: flex;
-  gap: 15px;
+  gap: var(--space-md);
 }
 
-/* ========================================
-   STATE VARIANT CLASSES
-   ======================================== */
-
-.is-hidden {
-  display: none;
+/* Album Artwork */
+#album-art {
+  width: 60%;
+  max-width: 360px;
+  margin: 0 auto;
+  border-radius: var(--radius-default);
+  display: block;
 }
 
-.is-info {
-  color: var(--secondary-text-color);
-}
-
-.is-error {
-  color: var(--error-color);
-}
-
-.is-success {
-  color: var(--main-color);
-}
-
-/* ========================================
-   ID-SPECIFIC STYLES
-   ======================================== */
-
-i {
-  margin-right: 3px;
-}
-
-p {
-  margin: 0;
-}
-
-h1,
-h2,
-h3 {
-  margin: 0 0 10px;
-}
-
-#status-msg {
-  font-size: 0.85rem;
-}
-
+/* Skip Button */
 #skip-btn {
   display: flex;
   align-items: center;
@@ -188,41 +222,73 @@ h3 {
   flex: 1 1 30%;
 }
 
-#album-art {
-  width: 60%;
-  margin: 0 auto;
-  border-radius: 12px;
+/* Status Message */
+#status-msg {
+  font-size: var(--font-size-sm);
 }
 
+/* Song Information */
+#song-title {
+  margin-bottom: 3em;
+}
+
+/* Artist Header Icon */
+#current-artist-header i {
+  color: var(--color-primary);
+}
+
+/* ========================================
+   UTILITY CLASSES
+   ======================================== */
+
+/* Display Utilities */
+.is-hidden {
+  display: none !important;
+}
+
+/* Text Color Utilities */
+.text-secondary,
+.is-info {
+  color: var(--color-text-secondary);
+}
+
+.text-error,
+.is-error {
+  color: var(--color-error);
+}
+
+.text-success,
+.is-success {
+  color: var(--color-primary);
+}
+
+/* ========================================
+   THIRD-PARTY OVERRIDES
+   ======================================== */
+
+/* Plyr Audio Player Customization */
+.plyr {
+  --plyr-color-main: var(--color-primary);
+  --plyr-audio-controls-background: var(--color-background);
+  --plyr-audio-control-color: var(--color-text-secondary);
+  flex: 1 1 70%;
+}
+
+.plyr--audio {
+  border-radius: var(--radius-default);
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+}
+
+/* ========================================
+   STATE-DEPENDENT VISIBILITY
+   ======================================== */
+
+/* Initially Hidden Elements */
 #game-container,
 #next-btn,
 #album-art,
 #song-title,
 #song-artist {
   display: none;
-}
-
-#song-title {
-  margin-bottom: 3em;
-}
-
-#current-artist-header i {
-  color: var(--main-color);
-}
-
-/* ========================================
-   PLYR CUSTOMIZATION
-   ======================================== */
-
-.plyr {
-  --plyr-color-main: var(--main-color);
-  --plyr-audio-controls-background: var(--bg-color);
-  --plyr-audio-control-color: var(--secondary-text-color);
-  flex: 1 1 70%;
-}
-
-.plyr--audio {
-  border-radius: 12px;
-  border: 1px solid var(--border-color);
-  overflow: hidden;
 }
