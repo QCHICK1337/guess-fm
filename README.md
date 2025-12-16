@@ -51,6 +51,7 @@ Try it out online: [Guess FM on GitHub Pages](https://qchick1337.github.io/guess
 - JavaScript (ES6)
 - [iTunes Search API](https://performance-partners.apple.com/search-api)
 - [Plyr](https://plyr.io/) for the audio player UI (loaded via CDN)
+- [Canvas Confetti](https://www.npmjs.com/package/canvas-confetti) for celebration effects (loaded via CDN)
 - [Font Awesome](https://fontawesome.com/)
 
 ## Project Structure
