@@ -209,6 +209,8 @@ function showGameRoundUI() {
   DOM.feedbackDisplay.classList.remove("is-success");
   DOM.feedbackDisplay.textContent = "";
   DOM.guessInput.value = "";
+
+  DOM.guessInput.focus();
 }
 
 // Show results UI (answer and album visible, input hidden)
@@ -340,6 +342,7 @@ async function searchAndLoadArtist(artistName) {
     populateSongSuggestions(gameState.allSongs);
     showGameScreens();
     playCurrentRound();
+    DOM.guessInput.focus();
     updateStatusMessage("", "");
   } catch (error) {
     console.error("Error loading artist:", error);
@@ -363,6 +366,20 @@ DOM.searchInput.addEventListener("keydown", (event) => {
   if (event.key === "Enter") {
     event.preventDefault();
     DOM.searchBtn.click();
+  }
+});
+
+DOM.guessInput.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    event.stopPropagation();
+    DOM.submitBtn.click();
+  }
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Enter" && DOM.nextBtn.style.display !== "none") {
+    DOM.nextBtn.click();
   }
 });
 
