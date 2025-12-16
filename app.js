@@ -220,6 +220,7 @@ searchBtn.addEventListener("click", (event) => {
     })
     .catch((error) => {
       console.error(error);
+      setStatus("Failed to load songs. Please try again.", "error");
       searchBtn.disabled = false;
       searchBtn.innerHTML =
         '<i class="fa-solid fa-magnifying-glass"></i>Search';
