@@ -158,6 +158,10 @@ function setSearchButtonLoading() {
 
 // Get a random unplayed song
 function getUnplayedSong() {
+  if (gameState.allSongs.length === 0) {
+    return;
+  }
+
   // Reset if all songs have been played
   if (gameState.playHistory.length === gameState.allSongs.length) {
     updateStatusMessage(CONFIG.MESSAGES.GAME_RESET, "info");
@@ -182,6 +186,11 @@ function getUnplayedSong() {
 function playCurrentRound() {
   audioPlayer.pause();
   gameState.currentSong = getUnplayedSong();
+  if (!gameState.currentSong) {
+    updateStatusMessage(CONFIG.MESSAGES.NO_SONGS_FOUND, "error");
+    return;
+  }
+
   DOM.audioPlayer.src = gameState.currentSong.previewUrl;
 
   audioPlayer.play().catch(() => {
@@ -299,6 +308,8 @@ async function searchAndLoadArtist(artistName) {
     return;
   }
 
+  gameState.reset();
+
   setSearchButtonLoading();
 
   try {
@@ -344,6 +355,7 @@ async function searchAndLoadArtist(artistName) {
     playCurrentRound();
     DOM.guessInput.focus();
     updateStatusMessage("", "");
+    resetSearchButton();
   } catch (error) {
     console.error("Error loading artist:", error);
     updateStatusMessage(CONFIG.MESSAGES.LOAD_ERROR, "error");
@@ -378,7 +390,11 @@ DOM.guessInput.addEventListener("keydown", (event) => {
 });
 
 document.addEventListener("keydown", (event) => {
-  if (event.key === "Enter" && DOM.nextBtn.style.display !== "none") {
+  if (
+    event.key === "Enter" &&
+    getComputedStyle(DOM.nextBtn).display !== "none" &&
+    gameState.allSongs.length > 0
+  ) {
     DOM.nextBtn.click();
   }
 });
