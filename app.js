@@ -64,6 +64,12 @@ const DOM = {
   submitBtn: document.getElementById("submit-btn"),
   skipBtn: document.getElementById("skip-btn"),
   nextBtn: document.getElementById("next-btn"),
+
+  //Scoreboard
+  scoreboard: document.getElementById("scoreboard"),
+  scoreTotal: document.getElementById("score-total"),
+  scoreStreak: document.getElementById("score-streak"),
+  scoreRounds: document.getElementById("score-rounds"),
 };
 
 /* ========================================
@@ -81,6 +87,81 @@ const gameState = {
     this.playHistory = [];
   },
 };
+
+const scoreState = {
+  total: 0,
+  rounds: 0,
+  streak: 0,
+  bestStreak: 0,
+  roundStartTs: 0,
+  attemptsInRound: 0,
+  lastResult: null,
+  history: [],
+  currentSongId: null,
+  artistId: null,
+};
+
+/* ========================================
+   SCORING HELPERS
+   ======================================== */
+
+function startRoundScore(songId) {
+  scoreState.roundStartTs = Date.now();
+  scoreState.attemptsInRound = 0;
+  scoreState.lastResult = null;
+  scoreState.currentSongId = songId;
+}
+
+function noteAttempt() {
+  scoreState.attemptsInRound++;
+}
+
+function finalizeRoundScore(result) {
+  const T = (Date.now() - scoreState.roundStartTs) / 1000;
+  const A = scoreState.attemptsInRound;
+  const skipPenalty = 30;
+
+  let points;
+  if (result === "skip") {
+    points = -skipPenalty;
+  } else {
+    points = Math.max(
+      0,
+      (100 - 2 * T - 10 * (A - 1)) * (1 + 0.1 * scoreState.streak)
+    );
+  }
+
+  scoreState.total = Math.max(0, scoreState.total + points);
+  scoreState.rounds++;
+
+  if (result === "correct") {
+    scoreState.streak++;
+    scoreState.bestStreak = Math.max(scoreState.bestStreak, scoreState.streak);
+  }
+
+  if (result === "skip") {
+    scoreState.streak = 0;
+  }
+
+  scoreState.lastResult = result;
+
+  scoreState.history.push({
+    songId: scoreState.currentSongId,
+    points,
+    T,
+    A,
+    result,
+    at: Date.now(),
+  });
+
+  renderScoreboard();
+}
+
+function renderScoreboard() {
+  DOM.scoreTotal.textContent = Math.round(scoreState.total);
+  DOM.scoreStreak.textContent = scoreState.streak;
+  DOM.scoreRounds.textContent = scoreState.rounds;
+}
 
 /* ========================================
    AUDIO PLAYER INITIALIZATION
@@ -193,6 +274,8 @@ function playCurrentRound() {
 
   DOM.audioPlayer.src = gameState.currentSong.previewUrl;
 
+  startRoundScore(gameState.currentSong.trackId);
+
   audioPlayer.play().catch(() => {
     updateStatusMessage(CONFIG.MESSAGES.PLAY_AUDIO_HINT, "info");
   });
@@ -252,6 +335,7 @@ function showResultsUI() {
 function showGameScreens() {
   setVisibility([DOM.gameContainer], "flex");
   setVisibility([DOM.introSection, DOM.searchInput, DOM.searchBtn], "none");
+  DOM.scoreboard.classList.remove("is-hidden");
 }
 
 // Show search interface, hide game screen
@@ -310,6 +394,14 @@ async function searchAndLoadArtist(artistName) {
 
   gameState.reset();
 
+  // Reset score for new artist
+  scoreState.total = 0;
+  scoreState.rounds = 0;
+  scoreState.streak = 0;
+  scoreState.bestStreak = 0;
+  scoreState.history = [];
+  renderScoreboard();
+
   setSearchButtonLoading();
 
   try {
@@ -330,6 +422,7 @@ async function searchAndLoadArtist(artistName) {
     }
 
     const artistId = artistData.results[0].artistId;
+    scoreState.artistId = artistId;
     DOM.artistNameDisplay.textContent = artistData.results[0].artistName;
 
     // Fetch all songs by the artist
@@ -408,10 +501,13 @@ DOM.submitBtn.addEventListener("click", () => {
     return;
   }
 
+  noteAttempt();
+
   if (isGuessCorrect(userGuess, gameState.currentSong.trackName)) {
     DOM.feedbackDisplay.textContent = CONFIG.MESSAGES.CORRECT;
     DOM.feedbackDisplay.classList.add("is-success");
     showResultsUI();
+    finalizeRoundScore("correct");
   } else {
     DOM.feedbackDisplay.textContent = CONFIG.MESSAGES.INCORRECT;
   }
@@ -426,5 +522,6 @@ DOM.nextBtn.addEventListener("click", () => {
 // Skip current song
 DOM.skipBtn.addEventListener("click", () => {
   DOM.feedbackDisplay.textContent = "";
+  finalizeRoundScore("skip");
   playCurrentRound();
 });
