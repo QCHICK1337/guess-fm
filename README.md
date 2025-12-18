@@ -16,7 +16,20 @@ Try it out online: [Guess FM on GitHub Pages](https://qchick1337.github.io/guess
 - **Audio Previews:** Listen to 30-second snippets of songs.
 - **Guessing Game:** Type your guess for the song title and get instant feedback.
 - **Skip & Next:** Skip songs or move to the next round easily.
+- **Score System:** Earn points based on speed and accuracy, with streak bonuses for consecutive correct answers.
 - **Responsive Design:** Works well on desktop and mobile devices.
+
+## Scoring System
+
+Your score is calculated based on multiple factors:
+
+- **Base Points:** Start with 100 points per song
+- **Time Penalty:** -2 points per second (faster guesses = higher score)
+- **Attempt Penalty:** -10 points for each wrong guess beyond the first
+- **Streak Bonus:** +10% multiplier for each consecutive correct answer
+- **Skip Penalty:** -30 points for skipping a song (resets your streak)
+
+**Formula:** `Score = max(0, (100 - 2×Time - 10×(Attempts-1)) × (1 + 0.1×Streak))`
 
 ## Getting Started
 
