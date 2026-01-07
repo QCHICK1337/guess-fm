@@ -155,6 +155,7 @@ function finalizeRoundScore(result) {
   });
 
   renderScoreboard();
+  return points;
 }
 
 function renderScoreboard() {
@@ -504,10 +505,12 @@ DOM.submitBtn.addEventListener("click", () => {
   noteAttempt();
 
   if (isGuessCorrect(userGuess, gameState.currentSong.trackName)) {
-    DOM.feedbackDisplay.textContent = CONFIG.MESSAGES.CORRECT;
+    const points = finalizeRoundScore("correct");
+    DOM.feedbackDisplay.textContent = `${CONFIG.MESSAGES.CORRECT} +${Math.round(
+      points
+    )} points`;
     DOM.feedbackDisplay.classList.add("is-success");
     showResultsUI();
-    finalizeRoundScore("correct");
   } else {
     DOM.feedbackDisplay.textContent = CONFIG.MESSAGES.INCORRECT;
   }
