@@ -308,12 +308,6 @@ function showGameRoundUI() {
 
 // Show results UI (answer and album visible, input hidden)
 function showResultsUI() {
-  setVisibility(
-    [DOM.songArtistDisplay, DOM.albumArt, DOM.songTitleDisplay, DOM.nextBtn],
-    "block"
-  );
-  setVisibility([DOM.guessInput, DOM.submitBtn, DOM.skipBtn], "none");
-
   // Fetch high-resolution album art
   const artworkUrl = gameState.currentSong.artworkUrl100.replace(
     CONFIG.ITUNES_API.ARTWORK_SIZE_SMALL,
@@ -323,6 +317,28 @@ function showResultsUI() {
   DOM.albumArt.src = artworkUrl;
   DOM.songArtistDisplay.textContent = gameState.currentSong.artistName;
   DOM.songTitleDisplay.textContent = gameState.currentSong.trackName;
+
+  setVisibility([DOM.albumArt], "none");
+
+  if (DOM.albumArt.complete) {
+    setVisibility([DOM.albumArt], "block");
+  } else {
+    DOM.albumArt.addEventListener(
+      "load",
+      () => setVisibility([DOM.albumArt], "block"),
+      { once: true }
+    );
+    DOM.albumArt.addEventListener("error", () => {
+      setVisibility([DOM.albumArt], "none");
+      // TODO: Set fallback message or placeholder here
+    });
+  }
+
+  setVisibility(
+    [DOM.songArtistDisplay, DOM.songTitleDisplay, DOM.nextBtn],
+    "block"
+  );
+  setVisibility([DOM.guessInput, DOM.submitBtn, DOM.skipBtn], "none");
 
   // Celebration effect
   confetti({
