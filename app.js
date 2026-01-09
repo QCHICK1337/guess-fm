@@ -33,6 +33,9 @@ const CONFIG = {
     CORRECT: "Correct!",
     INCORRECT: "Wrong! Try again.",
   },
+  GAME: {
+    MAX_ROUNDS: 15,
+  },
 };
 
 /* ========================================
@@ -43,6 +46,8 @@ const DOM = {
   // Screen sections
   introSection: document.getElementById("intro-section"),
   gameContainer: document.getElementById("game-container"),
+  endGameScreen: document.getElementById("end-game-screen"),
+  audioContainer: document.querySelector(".audio-container"),
 
   // Search/Input
   searchInput: document.getElementById("artist-input"),
@@ -70,6 +75,12 @@ const DOM = {
   scoreTotal: document.getElementById("score-total"),
   scoreStreak: document.getElementById("score-streak"),
   scoreRounds: document.getElementById("score-rounds"),
+
+  //Results
+  finalScore: document.getElementById("final-score"),
+  finalStreak: document.getElementById("final-streak"),
+  finalRounds: document.getElementById("final-rounds"),
+  newGameBtn: document.getElementById("new-game-btn"),
 };
 
 /* ========================================
@@ -117,6 +128,10 @@ function noteAttempt() {
 }
 
 function finalizeRoundScore(result) {
+  if (scoreState.rounds >= CONFIG.GAME.MAX_ROUNDS) {
+    return;
+  }
+
   const T = (Date.now() - scoreState.roundStartTs) / 1000;
   const A = scoreState.attemptsInRound;
   const skipPenalty = 30;
@@ -161,7 +176,7 @@ function finalizeRoundScore(result) {
 function renderScoreboard() {
   DOM.scoreTotal.textContent = Math.round(scoreState.total);
   DOM.scoreStreak.textContent = scoreState.streak;
-  DOM.scoreRounds.textContent = scoreState.rounds;
+  DOM.scoreRounds.textContent = scoreState.rounds + 1 + ` / 15`;
 }
 
 /* ========================================
@@ -242,12 +257,6 @@ function setSearchButtonLoading() {
 function getUnplayedSong() {
   if (gameState.allSongs.length === 0) {
     return;
-  }
-
-  // Reset if all songs have been played
-  if (gameState.playHistory.length === gameState.allSongs.length) {
-    updateStatusMessage(CONFIG.MESSAGES.GAME_RESET, "info");
-    gameState.playHistory = [];
   }
 
   // Pick a random song not yet played
@@ -357,8 +366,35 @@ function showGameScreens() {
 
 // Show search interface, hide game screen
 function showSearchScreen() {
-  setVisibility([DOM.introSection, DOM.searchInput, DOM.searchBtn], "flex");
-  setVisibility([DOM.gameContainer], "none");
+  setVisibility([DOM.introSection, DOM.searchInput, DOM.searchBtn], "block");
+  setVisibility([DOM.gameContainer, DOM.endGameScreen], "none");
+}
+
+function showEndGameScreen() {
+  audioPlayer.pause();
+
+  setVisibility([DOM.endGameScreen], "block");
+  setVisibility(
+    [
+      DOM.guessInput,
+      DOM.submitBtn,
+      DOM.skipBtn,
+      DOM.nextBtn,
+      DOM.audioContainer,
+      DOM.artistHeader,
+      DOM.scoreboard,
+      DOM.statusMsg,
+      DOM.albumArt,
+      DOM.songArtistDisplay,
+      DOM.songTitleDisplay,
+    ],
+    "none"
+  );
+
+  // Populate final results
+  DOM.finalScore.textContent = Math.round(scoreState.total);
+  DOM.finalStreak.textContent = scoreState.bestStreak;
+  DOM.finalRounds.textContent = scoreState.rounds;
 }
 
 /* ========================================
@@ -461,7 +497,15 @@ async function searchAndLoadArtist(artistName) {
 
     // Step 4: Populate suggestions and show game
     populateSongSuggestions(gameState.allSongs);
+    setVisibility(
+      [DOM.albumArt, DOM.songArtistDisplay, DOM.songTitleDisplay],
+      "none"
+    );
     showGameScreens();
+    showGameRoundUI();
+    setVisibility([DOM.audioContainer, DOM.scoreboard], "flex");
+    setVisibility([DOM.artistHeader, DOM.statusMsg], "block");
+    updateStatusMessage("", "");
     playCurrentRound();
     DOM.guessInput.focus();
     updateStatusMessage("", "");
@@ -511,6 +555,11 @@ document.addEventListener("keydown", (event) => {
 
 // Submit guess
 DOM.submitBtn.addEventListener("click", () => {
+  if (scoreState.rounds === CONFIG.GAME.MAX_ROUNDS) {
+    showEndGameScreen();
+    return;
+  }
+
   const userGuess = DOM.guessInput.value;
 
   if (userGuess.trim() === "") {
@@ -522,11 +571,15 @@ DOM.submitBtn.addEventListener("click", () => {
 
   if (isGuessCorrect(userGuess, gameState.currentSong.trackName)) {
     const points = finalizeRoundScore("correct");
-    DOM.feedbackDisplay.textContent = `${CONFIG.MESSAGES.CORRECT} +${Math.round(
-      points
-    )} points`;
-    DOM.feedbackDisplay.classList.add("is-success");
-    showResultsUI();
+
+    // Only show results if game hasn't ended
+    if (scoreState.rounds <= CONFIG.GAME.MAX_ROUNDS) {
+      DOM.feedbackDisplay.textContent = `${
+        CONFIG.MESSAGES.CORRECT
+      } +${Math.round(points)} points`;
+      DOM.feedbackDisplay.classList.add("is-success");
+      showResultsUI();
+    }
   } else {
     DOM.feedbackDisplay.textContent = CONFIG.MESSAGES.INCORRECT;
   }
@@ -534,13 +587,36 @@ DOM.submitBtn.addEventListener("click", () => {
 
 // Move to next round
 DOM.nextBtn.addEventListener("click", () => {
-  showGameRoundUI();
-  playCurrentRound();
+  if (scoreState.rounds >= CONFIG.GAME.MAX_ROUNDS) {
+    showEndGameScreen();
+  } else {
+    showGameRoundUI();
+    playCurrentRound();
+  }
 });
 
 // Skip current song
 DOM.skipBtn.addEventListener("click", () => {
+  if (scoreState.rounds >= CONFIG.GAME.MAX_ROUNDS) {
+    showEndGameScreen();
+    return;
+  }
+
   DOM.feedbackDisplay.textContent = "";
   finalizeRoundScore("skip");
-  playCurrentRound();
+
+  if (scoreState.rounds >= CONFIG.GAME.MAX_ROUNDS) {
+    showEndGameScreen();
+  } else {
+    playCurrentRound();
+  }
+});
+
+DOM.newGameBtn.addEventListener("click", () => {
+  if (scoreState.rounds >= CONFIG.GAME.MAX_ROUNDS) {
+    showSearchScreen();
+  } else {
+    showGameRoundUI();
+    playCurrentRound();
+  }
 });
