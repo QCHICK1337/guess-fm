@@ -122,7 +122,7 @@ document.addEventListener("keydown", (event) => {
 
 // Submit guess
 DOM.submitBtn.addEventListener("click", () => {
-  if (scoreState.rounds === CONFIG.GAME.MAX_ROUNDS) {
+  if (scoreState.rounds > CONFIG.GAME.MAX_ROUNDS) {
     audioPlayer.pause();
     showEndGameScreen(scoreState);
     return;
