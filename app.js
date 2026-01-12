@@ -176,7 +176,9 @@ function finalizeRoundScore(result) {
 function renderScoreboard() {
   DOM.scoreTotal.textContent = Math.round(scoreState.total);
   DOM.scoreStreak.textContent = scoreState.streak;
-  DOM.scoreRounds.textContent = scoreState.rounds + 1 + ` / 15`;
+  DOM.scoreRounds.innerHTML = `<span>${
+    scoreState.rounds + 1
+  }</span><span class="text-secondary"> / 15</span>`;
 }
 
 /* ========================================
@@ -387,6 +389,7 @@ function showEndGameScreen() {
       DOM.albumArt,
       DOM.songArtistDisplay,
       DOM.songTitleDisplay,
+      DOM.feedbackDisplay,
     ],
     "none"
   );
