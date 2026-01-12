@@ -28,10 +28,12 @@ export const scoreState = {
 };
 
 export function startRoundScore(songId) {
+  scoreState.rounds++;
   scoreState.roundStartTs = Date.now();
   scoreState.attemptsInRound = 0;
   scoreState.lastResult = null;
   scoreState.currentSongId = songId;
+  renderScoreboard();
 }
 
 export function noteAttempt() {
@@ -39,7 +41,7 @@ export function noteAttempt() {
 }
 
 export function finalizeRoundScore(result) {
-  if (scoreState.rounds >= CONFIG.GAME.MAX_ROUNDS) {
+  if (scoreState.rounds > CONFIG.GAME.MAX_ROUNDS) {
     return;
   }
 
@@ -58,7 +60,6 @@ export function finalizeRoundScore(result) {
   }
 
   scoreState.total = Math.max(0, scoreState.total + points);
-  scoreState.rounds++;
 
   if (result === "correct") {
     scoreState.streak++;
@@ -87,9 +88,7 @@ export function finalizeRoundScore(result) {
 export function renderScoreboard() {
   DOM.scoreTotal.textContent = Math.round(scoreState.total);
   DOM.scoreStreak.textContent = scoreState.streak;
-  DOM.scoreRounds.innerHTML = `<span>${
-    scoreState.rounds + 1
-  }</span><span class="text-secondary"> / 15</span>`;
+  DOM.scoreRounds.innerHTML = `<span>${scoreState.rounds}</span><span class="text-secondary"> / 15</span>`;
 }
 
 export function getUnplayedSong() {
