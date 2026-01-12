@@ -70,10 +70,16 @@ Your score is calculated based on multiple factors:
 ## Project Structure
 
 ```
-├── app.js         # Main game logic
-├── index.html     # App UI
-├── style.css      # Styling
-├── logo.svg       # App logo
+├── index.html      # HTML markup - game interface and layout
+├── style.css       # CSS styling - design tokens, layout, components
+├── app.js          # Entry point - event listeners and game flow control
+├── api.js          # iTunes API integration - artist search and song fetching
+├── config.js       # Configuration - constants, API settings, and game rules
+├── game.js         # Game state management - scoring, song selection, round logic
+├── ui.js           # UI state functions - screen visibility, rendering results
+├── dom.js          # DOM references
+├── utils.js        # Utility functions - text normalization, messaging, helpers
+└── logo.svg        # App logo
 ```
 
 ## Credits
