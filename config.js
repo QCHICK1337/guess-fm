@@ -31,5 +31,12 @@ export const CONFIG = {
   },
   GAME: {
     MAX_ROUNDS: 15,
+    SCORING: {
+      BASE_POINTS: 100,
+      TIME_PENALTY: 2,
+      ATTEMPT_PENALTY: 10,
+      SKIP_PENALTY: 30,
+      STREAK_MULTIPLIER: 0.1,
+    },
   },
 };
