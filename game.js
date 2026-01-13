@@ -45,17 +45,19 @@ export function finalizeRoundScore(result) {
     return;
   }
 
-  const T = (Date.now() - scoreState.roundStartTs) / 1000;
-  const A = scoreState.attemptsInRound;
-  const skipPenalty = 30;
+  const timeSinceRoundStart = (Date.now() - scoreState.roundStartTs) / 1000;
+  const attemptsInCurrentRound = scoreState.attemptsInRound;
 
   let points;
   if (result === "skip") {
-    points = -skipPenalty;
+    points = -CONFIG.GAME.SCORING.SKIP_PENALTY;
   } else {
     points = Math.max(
       0,
-      (100 - 2 * T - 10 * (A - 1)) * (1 + 0.1 * scoreState.streak)
+      (CONFIG.GAME.SCORING.BASE_POINTS -
+        CONFIG.GAME.SCORING.TIME_PENALTY * timeSinceRoundStart -
+        CONFIG.GAME.SCORING.ATTEMPT_PENALTY * (attemptsInCurrentRound - 1)) *
+        (1 + CONFIG.GAME.SCORING.STREAK_MULTIPLIER * scoreState.streak)
     );
   }
 
@@ -75,8 +77,8 @@ export function finalizeRoundScore(result) {
   scoreState.history.push({
     songId: scoreState.currentSongId,
     points,
-    T,
-    A,
+    T: timeSinceRoundStart,
+    A: attemptsInCurrentRound,
     result,
     at: Date.now(),
   });
