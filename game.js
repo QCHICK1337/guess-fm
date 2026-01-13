@@ -17,6 +17,7 @@ export const gameState = {
 export const scoreState = {
   total: 0,
   rounds: 0,
+  maxRounds: 0,
   streak: 0,
   bestStreak: 0,
   roundStartTs: 0,
@@ -41,7 +42,7 @@ export function noteAttempt() {
 }
 
 export function finalizeRoundScore(result) {
-  if (scoreState.rounds > CONFIG.GAME.MAX_ROUNDS) {
+  if (scoreState.rounds > scoreState.maxRounds) {
     return;
   }
 
@@ -90,11 +91,15 @@ export function finalizeRoundScore(result) {
 export function renderScoreboard() {
   DOM.scoreTotal.textContent = Math.round(scoreState.total);
   DOM.scoreStreak.textContent = scoreState.streak;
-  DOM.scoreRounds.innerHTML = `<span>${scoreState.rounds}</span><span class="text-secondary"> / 15</span>`;
+  DOM.scoreRounds.innerHTML = `<span>${scoreState.rounds}</span><span class="text-secondary"> / ${scoreState.maxRounds}</span>`;
 }
 
 export function getUnplayedSong() {
   if (gameState.allSongs.length === 0) {
+    return;
+  }
+
+  if (gameState.playHistory.length === gameState.allSongs.length) {
     return;
   }
 

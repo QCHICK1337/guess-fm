@@ -63,6 +63,11 @@ async function loadArtistAndStartGame(artistName) {
     DOM.artistNameDisplay.textContent = result.artistName;
     gameState.allSongs = result.songs;
 
+    scoreState.maxRounds = Math.min(
+      result.songs.length,
+      CONFIG.GAME.MAX_ROUNDS
+    );
+
     populateSongSuggestions(gameState.allSongs);
     setVisibility(
       [DOM.albumArt, DOM.songArtistDisplay, DOM.songTitleDisplay],
@@ -122,7 +127,7 @@ document.addEventListener("keydown", (event) => {
 
 // Submit guess
 DOM.submitBtn.addEventListener("click", () => {
-  if (scoreState.rounds > CONFIG.GAME.MAX_ROUNDS) {
+  if (scoreState.rounds > scoreState.maxRounds) {
     audioPlayer.pause();
     showEndGameScreen(scoreState);
     return;
@@ -141,7 +146,7 @@ DOM.submitBtn.addEventListener("click", () => {
     const points = finalizeRoundScore("correct");
 
     // Only show results if game hasn't ended
-    if (scoreState.rounds <= CONFIG.GAME.MAX_ROUNDS) {
+    if (scoreState.rounds <= scoreState.maxRounds) {
       DOM.feedbackDisplay.textContent = `${
         CONFIG.MESSAGES.CORRECT
       } +${Math.round(points)} points`;
@@ -155,7 +160,7 @@ DOM.submitBtn.addEventListener("click", () => {
 
 // Move to next round
 DOM.nextBtn.addEventListener("click", () => {
-  if (scoreState.rounds >= CONFIG.GAME.MAX_ROUNDS) {
+  if (scoreState.rounds >= scoreState.maxRounds) {
     audioPlayer.pause();
     showEndGameScreen(scoreState);
   } else {
@@ -166,7 +171,7 @@ DOM.nextBtn.addEventListener("click", () => {
 
 // Skip current song
 DOM.skipBtn.addEventListener("click", () => {
-  if (scoreState.rounds >= CONFIG.GAME.MAX_ROUNDS) {
+  if (scoreState.rounds >= scoreState.maxRounds) {
     audioPlayer.pause();
     showEndGameScreen(scoreState);
     return;
@@ -175,7 +180,7 @@ DOM.skipBtn.addEventListener("click", () => {
   DOM.feedbackDisplay.textContent = "";
   finalizeRoundScore("skip");
 
-  if (scoreState.rounds >= CONFIG.GAME.MAX_ROUNDS) {
+  if (scoreState.rounds >= scoreState.maxRounds) {
     audioPlayer.pause();
     showEndGameScreen(scoreState);
   } else {
@@ -184,7 +189,7 @@ DOM.skipBtn.addEventListener("click", () => {
 });
 
 DOM.newGameBtn.addEventListener("click", () => {
-  if (scoreState.rounds >= CONFIG.GAME.MAX_ROUNDS) {
+  if (scoreState.rounds >= scoreState.maxRounds) {
     showSearchScreen();
   } else {
     showGameRoundUI();
