@@ -26,6 +26,14 @@ export const scoreState = {
   history: [],
   currentSongId: null,
   artistId: null,
+
+  reset() {
+    this.total = 0;
+    this.rounds = 0;
+    this.streak = 0;
+    this.bestStreak = 0;
+    this.history = [];
+  },
 };
 
 export function startRoundScore(songId) {

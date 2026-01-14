@@ -45,13 +45,7 @@ audioPlayer.volume = CONFIG.AUDIO_PLAYER.VOLUME;
 
 async function loadArtistAndStartGame(artistName) {
   gameState.reset();
-
-  // Reset score for new artist
-  scoreState.total = 0;
-  scoreState.rounds = 0;
-  scoreState.streak = 0;
-  scoreState.bestStreak = 0;
-  scoreState.history = [];
+  scoreState.reset();
   renderScoreboard();
 
   setSearchButtonLoading();
