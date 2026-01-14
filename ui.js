@@ -3,6 +3,10 @@ import { DOM } from "./dom.js";
 import { setVisibility } from "./utils.js";
 
 export function showGameRoundUI() {
+  // Clean up old listeners before setting new image
+  DOM.albumArt.removeEventListener("load", handleImageLoad);
+  DOM.albumArt.removeEventListener("error", handleImageError);
+
   setVisibility([DOM.guessInput, DOM.submitBtn, DOM.skipBtn], "block");
   setVisibility(
     [DOM.albumArt, DOM.songArtistDisplay, DOM.songTitleDisplay, DOM.nextBtn],
@@ -23,24 +27,20 @@ export function showResultsUI(currentSong) {
     CONFIG.ITUNES_API.ARTWORK_SIZE_LARGE
   );
 
+  // Clean up old listeners before setting new image
+  DOM.albumArt.removeEventListener("load", handleImageLoad);
+  DOM.albumArt.removeEventListener("error", handleImageError);
+
   DOM.albumArt.src = artworkUrl;
+
   DOM.songArtistDisplay.textContent = currentSong.artistName;
   DOM.songTitleDisplay.textContent = currentSong.trackName;
-
-  setVisibility([DOM.albumArt], "none");
 
   if (DOM.albumArt.complete) {
     setVisibility([DOM.albumArt], "block");
   } else {
-    DOM.albumArt.addEventListener(
-      "load",
-      () => setVisibility([DOM.albumArt], "block"),
-      { once: true }
-    );
-    DOM.albumArt.addEventListener("error", () => {
-      setVisibility([DOM.albumArt], "none");
-      // TODO: Set fallback message or placeholder here
-    });
+    DOM.albumArt.addEventListener("load", handleImageLoad, { once: true });
+    DOM.albumArt.addEventListener("error", handleImageError);
   }
 
   setVisibility(
@@ -108,4 +108,12 @@ export function populateSongSuggestions(songs) {
     option.value = song.trackName;
     DOM.songSuggestions.appendChild(option);
   });
+}
+
+function handleImageLoad() {
+  setVisibility([DOM.albumArt], "block");
+}
+
+function handleImageError() {
+  setVisibility([DOM.albumArt], "none");
 }
