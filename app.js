@@ -74,7 +74,6 @@ async function loadArtistAndStartGame(artistName) {
     updateStatusMessage("", "");
     playCurrentRound(audioPlayer);
     DOM.guessInput.focus();
-    updateStatusMessage("", "");
     resetSearchButton();
   } catch (error) {
     console.error("Error loading artist:", error);
