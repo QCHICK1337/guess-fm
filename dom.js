@@ -31,6 +31,7 @@ export const DOM = {
   scoreTotal: document.getElementById("score-total"),
   scoreStreak: document.getElementById("score-streak"),
   scoreRounds: document.getElementById("score-rounds"),
+  pointsNotification: document.getElementById("points-notification"),
 
   // Results
   finalScore: document.getElementById("final-score"),

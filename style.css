@@ -217,10 +217,38 @@ button:disabled {
 }
 
 .score-item {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: var(--space-xs);
+}
+
+/* Points Notification */
+.points-notification {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.5rem;
+  font-weight: 700;
+  opacity: 0;
+  pointer-events: none;
+  white-space: nowrap;
+  transition: opacity 0.3s ease, top 0.5s ease;
+}
+
+.points-notification.show {
+  opacity: 1;
+  top: -40px;
+}
+
+.points-notification.positive {
+  color: var(--color-primary);
+}
+
+.points-notification.negative {
+  color: var(--color-error);
 }
 
 .score-label {
