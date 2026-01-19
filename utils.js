@@ -46,6 +46,22 @@ export function resetSearchButton() {
     '<i class="fa-solid fa-magnifying-glass"></i>Search';
 }
 
+export function showPointsUpdate(points) {
+  const notification = DOM.pointsNotification;
+
+  const sign = points >= 0 ? "+" : "";
+  notification.textContent = `${sign}${points}`;
+
+  notification.classList.remove("positive", "negative");
+  notification.classList.add(points >= 0 ? "positive" : "negative");
+
+  notification.classList.add("show");
+
+  setTimeout(() => {
+    notification.classList.remove("show");
+  }, 2000);
+}
+
 export function setSearchButtonLoading() {
   DOM.searchBtn.disabled = true;
   DOM.searchBtn.innerHTML = '<i class="fa-solid fa-spinner"></i>Loading...';

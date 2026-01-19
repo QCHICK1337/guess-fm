@@ -18,6 +18,7 @@ import {
   resetSearchButton,
   setSearchButtonLoading,
   setVisibility,
+  showPointsUpdate,
 } from "./utils.js";
 import { searchAndLoadArtist } from "./api.js";
 import {
@@ -140,9 +141,8 @@ DOM.submitBtn.addEventListener("click", () => {
 
     // Only show results if game hasn't ended
     if (scoreState.rounds <= scoreState.maxRounds) {
-      DOM.feedbackDisplay.textContent = `${
-        CONFIG.MESSAGES.CORRECT
-      } +${Math.round(points)} points`;
+      showPointsUpdate(Math.round(points));
+      DOM.feedbackDisplay.textContent = CONFIG.MESSAGES.CORRECT;
       DOM.feedbackDisplay.classList.add("is-success");
       showResultsUI(gameState.currentSong);
     }
@@ -171,7 +171,8 @@ DOM.skipBtn.addEventListener("click", () => {
   }
 
   DOM.feedbackDisplay.textContent = "";
-  finalizeRoundScore("skip");
+  const points = finalizeRoundScore("skip");
+  showPointsUpdate(Math.round(points));
 
   if (scoreState.rounds >= scoreState.maxRounds) {
     audioPlayer.pause();
