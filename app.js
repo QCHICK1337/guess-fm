@@ -27,6 +27,7 @@ import {
   showResultsUI,
   showSearchScreen,
   showEndGameScreen,
+  showConfetti,
   populateSongSuggestions,
 } from "./ui.js";
 
@@ -60,13 +61,13 @@ async function loadArtistAndStartGame(artistName) {
 
     scoreState.maxRounds = Math.min(
       result.songs.length,
-      CONFIG.GAME.MAX_ROUNDS
+      CONFIG.GAME.MAX_ROUNDS,
     );
 
     populateSongSuggestions(gameState.allSongs);
     setVisibility(
       [DOM.albumArt, DOM.songArtistDisplay, DOM.songTitleDisplay],
-      "none"
+      "none",
     );
     showGameScreens();
     showGameRoundUI();
@@ -144,6 +145,7 @@ DOM.submitBtn.addEventListener("click", () => {
       showPointsUpdate(Math.round(points));
       DOM.feedbackDisplay.textContent = CONFIG.MESSAGES.CORRECT;
       DOM.feedbackDisplay.classList.add("is-success");
+      showConfetti();
       showResultsUI(gameState.currentSong);
     }
   } else {
@@ -178,7 +180,9 @@ DOM.skipBtn.addEventListener("click", () => {
     audioPlayer.pause();
     showEndGameScreen(scoreState);
   } else {
-    playCurrentRound(audioPlayer);
+    DOM.feedbackDisplay.textContent = CONFIG.MESSAGES.SONG_REVEAL;
+    DOM.feedbackDisplay.classList.add("is-info");
+    showResultsUI(gameState.currentSong);
   }
 });
 
