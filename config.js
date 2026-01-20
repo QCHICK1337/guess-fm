@@ -28,6 +28,7 @@ export const CONFIG = {
     EMPTY_GUESS: "Please enter a guess.",
     CORRECT: "Correct!",
     INCORRECT: "Wrong! Try again.",
+    SONG_REVEAL: "The song was:",
   },
   GAME: {
     MAX_ROUNDS: 15,

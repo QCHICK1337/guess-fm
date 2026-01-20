@@ -10,7 +10,7 @@ export function showGameRoundUI() {
   setVisibility([DOM.guessInput, DOM.submitBtn, DOM.skipBtn], "block");
   setVisibility(
     [DOM.albumArt, DOM.songArtistDisplay, DOM.songTitleDisplay, DOM.nextBtn],
-    "none"
+    "none",
   );
 
   DOM.feedbackDisplay.classList.remove("is-success");
@@ -24,7 +24,7 @@ export function showResultsUI(currentSong) {
   // Fetch high-resolution album art
   const artworkUrl = currentSong.artworkUrl100.replace(
     CONFIG.ITUNES_API.ARTWORK_SIZE_SMALL,
-    CONFIG.ITUNES_API.ARTWORK_SIZE_LARGE
+    CONFIG.ITUNES_API.ARTWORK_SIZE_LARGE,
   );
 
   // Clean up old listeners before setting new image
@@ -45,16 +45,9 @@ export function showResultsUI(currentSong) {
 
   setVisibility(
     [DOM.songArtistDisplay, DOM.songTitleDisplay, DOM.nextBtn],
-    "block"
+    "block",
   );
   setVisibility([DOM.guessInput, DOM.submitBtn, DOM.skipBtn], "none");
-
-  // Celebration effect
-  confetti({
-    particleCount: CONFIG.CONFETTI.PARTICLE_COUNT,
-    spread: CONFIG.CONFETTI.SPREAD,
-    origin: { y: CONFIG.CONFETTI.ORIGIN_Y },
-  });
 }
 
 export function showGameScreens() {
@@ -85,13 +78,21 @@ export function showEndGameScreen(scoreState) {
       DOM.songTitleDisplay,
       DOM.feedbackDisplay,
     ],
-    "none"
+    "none",
   );
 
   // Populate final results
   DOM.finalScore.textContent = Math.round(scoreState.total);
   DOM.finalStreak.textContent = scoreState.bestStreak;
   DOM.finalRounds.textContent = scoreState.rounds;
+}
+
+export function showConfetti() {
+  confetti({
+    particleCount: CONFIG.CONFETTI.PARTICLE_COUNT,
+    spread: CONFIG.CONFETTI.SPREAD,
+    origin: { y: CONFIG.CONFETTI.ORIGIN_Y },
+  });
 }
 
 export function populateSongSuggestions(songs) {
