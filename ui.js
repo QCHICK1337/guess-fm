@@ -3,10 +3,6 @@ import { DOM } from "./dom.js";
 import { setVisibility } from "./utils.js";
 
 export function showGameRoundUI() {
-  // Clean up old listeners before setting new image
-  DOM.albumArt.removeEventListener("load", handleImageLoad);
-  DOM.albumArt.removeEventListener("error", handleImageError);
-
   setVisibility([DOM.guessInput, DOM.submitBtn, DOM.skipBtn], "block");
   setVisibility(
     [DOM.albumArt, DOM.songArtistDisplay, DOM.songTitleDisplay, DOM.nextBtn],
@@ -21,25 +17,19 @@ export function showGameRoundUI() {
 }
 
 export function showResultsUI(currentSong) {
-  // Fetch high-resolution album art
-  const artworkUrl = currentSong.artworkUrl100.replace(
-    CONFIG.ITUNES_API.ARTWORK_SIZE_SMALL,
-    CONFIG.ITUNES_API.ARTWORK_SIZE_LARGE,
-  );
+  DOM.albumArt.classList.add("is-placeholder");
+  setVisibility([DOM.albumArt], "block");
 
-  // Clean up old listeners before setting new image
-  DOM.albumArt.removeEventListener("load", handleImageLoad);
-  DOM.albumArt.removeEventListener("error", handleImageError);
-
-  DOM.albumArt.src = artworkUrl;
+  const lowResUrl = currentSong.artworkUrl100;
+  DOM.albumArt.src = lowResUrl;
 
   DOM.songArtistDisplay.textContent = currentSong.artistName;
   DOM.songTitleDisplay.textContent = currentSong.trackName;
 
   if (DOM.albumArt.complete) {
-    setVisibility([DOM.albumArt], "block");
+    handleLowResLoad();
   } else {
-    DOM.albumArt.addEventListener("load", handleImageLoad, { once: true });
+    DOM.albumArt.addEventListener("load", handleLowResLoad, { once: true });
     DOM.albumArt.addEventListener("error", handleImageError);
   }
 
@@ -48,6 +38,27 @@ export function showResultsUI(currentSong) {
     "block",
   );
   setVisibility([DOM.guessInput, DOM.submitBtn, DOM.skipBtn], "none");
+
+  function handleLowResLoad() {
+    const highResUrl = currentSong.artworkUrl100.replace(
+      CONFIG.ITUNES_API.ARTWORK_SIZE_SMALL,
+      CONFIG.ITUNES_API.ARTWORK_SIZE_LARGE,
+    );
+
+    DOM.albumArt.src = highResUrl;
+
+    if (DOM.albumArt.complete) {
+      handleHighResLoad();
+    } else {
+      DOM.albumArt.addEventListener("load", handleHighResLoad, { once: true });
+      DOM.albumArt.addEventListener("error", handleImageError);
+    }
+  }
+
+  function handleHighResLoad() {
+    DOM.albumArt.classList.remove("is-placeholder");
+    setVisibility([DOM.albumArt], "block");
+  }
 }
 
 export function showGameScreens() {
@@ -109,10 +120,6 @@ export function populateSongSuggestions(songs) {
     option.value = song.trackName;
     DOM.songSuggestions.appendChild(option);
   });
-}
-
-function handleImageLoad() {
-  setVisibility([DOM.albumArt], "block");
 }
 
 function handleImageError() {
