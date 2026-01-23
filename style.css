@@ -347,7 +347,6 @@ button:disabled {
 .plyr--audio {
   border-radius: var(--radius-default);
   border: 1px solid var(--color-border);
-  overflow: hidden;
 }
 
 /* Mobile layout tweaks to stop the Skip button wrapping */
