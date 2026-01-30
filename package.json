@@ -2,7 +2,6 @@
   "name": "guess-fm",
   "version": "1.0.0",
   "description": "<div align=\"center\">\r    <img src=\"logo.svg\" alt=\"Guess FM logo\" width=\"160\" />\r </div>",
-  "main": "api.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint ."
