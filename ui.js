@@ -51,8 +51,14 @@ export function showResultsUI(currentSong) {
       handleHighResLoad();
     } else {
       DOM.albumArt.addEventListener("load", handleHighResLoad, { once: true });
-      DOM.albumArt.addEventListener("error", handleImageError);
+      DOM.albumArt.addEventListener("error", handleHighResLoadError, {
+        once: true,
+      });
     }
+  }
+
+  function handleHighResLoadError() {
+    DOM.albumArt.classList.remove("is-placeholder");
   }
 
   function handleHighResLoad() {
