@@ -7,13 +7,7 @@ export function setVisibility(elements, displayValue) {
 }
 
 export function updateStatusMessage(message, statusType) {
-  // Remove all status classes
-  DOM.statusMsg.classList.remove(
-    "is-info",
-    "is-error",
-    "is-success",
-    "is-hidden"
-  );
+  DOM.statusMsg.className = "";
 
   // Hide and clear if empty message
   if (message === "") {
