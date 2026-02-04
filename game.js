@@ -30,9 +30,15 @@ export const scoreState = {
   reset() {
     this.total = 0;
     this.rounds = 0;
+    this.maxRounds = 0;
     this.streak = 0;
     this.bestStreak = 0;
+    this.roundStartTs = 0;
+    this.attemptsInRound = 0;
+    this.lastResult = null;
     this.history = [];
+    this.currentSongId = null;
+    this.artistId = null;
   },
 };
 
@@ -66,7 +72,7 @@ export function finalizeRoundScore(result) {
       (CONFIG.GAME.SCORING.BASE_POINTS -
         CONFIG.GAME.SCORING.TIME_PENALTY * timeSinceRoundStart -
         CONFIG.GAME.SCORING.ATTEMPT_PENALTY * (attemptsInCurrentRound - 1)) *
-        (1 + CONFIG.GAME.SCORING.STREAK_MULTIPLIER * scoreState.streak)
+        (1 + CONFIG.GAME.SCORING.STREAK_MULTIPLIER * scoreState.streak),
     );
   }
 
