@@ -32,6 +32,7 @@ export const CONFIG = {
   },
   GAME: {
     MAX_ROUNDS: 15,
+    NOTIFICATION_TIMEOUT: 2000,
     SCORING: {
       BASE_POINTS: 100,
       TIME_PENALTY: 2,

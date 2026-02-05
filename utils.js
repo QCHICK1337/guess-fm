@@ -1,3 +1,4 @@
+import { CONFIG } from "./config.js";
 import { DOM } from "./dom.js";
 
 export function setVisibility(elements, displayValue) {
@@ -53,7 +54,7 @@ export function showPointsUpdate(points) {
 
   setTimeout(() => {
     notification.classList.remove("show");
-  }, 2000);
+  }, CONFIG.GAME.NOTIFICATION_TIMEOUT);
 }
 
 export function setSearchButtonLoading() {
