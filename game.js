@@ -6,11 +6,13 @@ export const gameState = {
   currentSong: null,
   allSongs: [],
   playHistory: [],
+  playQueue: [],
 
   reset() {
     this.currentSong = null;
     this.allSongs = [];
     this.playHistory = [];
+    this.playQueue = [];
   },
 };
 
@@ -117,18 +119,30 @@ export function getUnplayedSong() {
     return;
   }
 
-  // Pick a random song not yet played
-  let randomSong =
-    gameState.allSongs[Math.floor(Math.random() * gameState.allSongs.length)];
+  if (gameState.playQueue.length === 0) {
+    const playedSet = new Set(gameState.playHistory);
+    const remainingSongs = gameState.allSongs.filter(
+      (song) => !playedSet.has(song.trackId),
+    );
 
-  // Keep trying until we find an unplayed song
-  while (gameState.playHistory.includes(randomSong.trackId)) {
-    randomSong =
-      gameState.allSongs[Math.floor(Math.random() * gameState.allSongs.length)];
+    shuffleArray(remainingSongs);
+    gameState.playQueue = remainingSongs;
   }
 
-  gameState.playHistory.push(randomSong.trackId);
-  return randomSong;
+  const nextSong = gameState.playQueue.shift();
+  if (!nextSong) {
+    return;
+  }
+
+  gameState.playHistory.push(nextSong.trackId);
+  return nextSong;
+}
+
+function shuffleArray(items) {
+  for (let i = items.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [items[i], items[j]] = [items[j], items[i]];
+  }
 }
 
 export function playCurrentRound(audioPlayer) {
