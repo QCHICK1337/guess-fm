@@ -14,8 +14,7 @@ export async function searchAndLoadArtist(artistName) {
       CONFIG.ITUNES_API.ARTIST_SEARCH_LIMIT
     }`;
 
-    const artistResponse = await fetch(artistSearchUrl);
-    const artistData = await artistResponse.json();
+    const artistData = await fetchJson(artistSearchUrl);
 
     if (artistData.results.length === 0) {
       throw new Error(CONFIG.MESSAGES.ARTIST_NOT_FOUND);
@@ -25,8 +24,7 @@ export async function searchAndLoadArtist(artistName) {
 
     // Fetch all songs by the artist
     const songLookupUrl = `${CONFIG.ITUNES_API.BASE_URL}/lookup?id=${artist.artistId}&entity=song&limit=${CONFIG.ITUNES_API.SONG_LOOKUP_LIMIT}`;
-    const songsResponse = await fetch(songLookupUrl);
-    const songsData = await songsResponse.json();
+    const songsData = await fetchJson(songLookupUrl);
 
     // Filter and validate songs
     const songs = filterValidSongs(songsData.results, artist.artistName);
@@ -50,6 +48,14 @@ export async function searchAndLoadArtist(artistName) {
     }
     throw new Error(CONFIG.MESSAGES.LOAD_ERROR);
   }
+}
+
+async function fetchJson(url) {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`HTTP ${response.status}`);
+  }
+  return response.json();
 }
 
 function filterValidSongs(allTracks, artistName) {
