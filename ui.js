@@ -30,7 +30,7 @@ export function showResultsUI(currentSong) {
     handleLowResLoad();
   } else {
     DOM.albumArt.addEventListener("load", handleLowResLoad, { once: true });
-    DOM.albumArt.addEventListener("error", handleImageError);
+    DOM.albumArt.addEventListener("error", handleImageError, { once: true });
   }
 
   setVisibility(
