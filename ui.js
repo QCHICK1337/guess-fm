@@ -9,7 +9,7 @@ export function showGameRoundUI() {
     "none",
   );
 
-  DOM.feedbackDisplay.classList.remove("is-success");
+  DOM.feedbackDisplay.classList.remove("is-success", "is-info", "is-error");
   DOM.feedbackDisplay.textContent = "";
   DOM.guessInput.value = "";
 
