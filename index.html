@@ -21,10 +21,55 @@
 
   <body>
     <!-- Main Header -->
-    <header>
-      <img src="logo.svg" width="40" alt="Guess FM Logo" />
-      <h1>Guess FM</h1>
+    <header class="header">
+      <div class="header__center">
+        <div class="brand">
+          <img src="logo.svg" width="40" alt="Guess FM Logo" />
+          <h1>Guess FM</h1>
+        </div>
+      </div>
+      <!-- Help Button -->
+      <div class="header__right">
+        <button class="help-btn" id="help-btn" aria-label="Help">
+          <i class="fa-solid fa-circle-question"></i>
+        </button>
+      </div>
     </header>
+
+    <!-- Help Modal -->
+    <div class="modal" id="help-modal" aria-hidden="true">
+      <div
+        class="modal-content"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
+      >
+        <h2 id="modal-title">How to Play</h2>
+        <p>
+          Welcome to Guess FM! Test your music knowledge by following these
+          steps:
+        </p>
+        <ol>
+          <li>Search for an artist using the search bar.</li>
+          <li>Listen to the audio snippet of a song by that artist.</li>
+          <li>Type your guess for the song title and submit it.</li>
+          <li>
+            Earn points for correct answers and try to maintain your streak!
+          </li>
+          <li>
+            Skip songs if you're stuck, but be careful - it may affect your
+            score!
+          </li>
+        </ol>
+        <button
+          class="close-btn"
+          id="modal-close-btn"
+          aria-label="Close Help Modal"
+        >
+          <i class="fa-solid fa-xmark"></i>Close
+        </button>
+      </div>
+    </div>
 
     <!-- Main Content -->
     <main>

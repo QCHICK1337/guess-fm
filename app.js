@@ -88,6 +88,30 @@ async function loadArtistAndStartGame(artistName) {
    EVENT LISTENERS
    ======================================== */
 
+DOM.helpBtn.addEventListener("click", () => {
+  DOM.helpModal.classList.add("is-open");
+  DOM.helpModal.setAttribute("aria-hidden", "false");
+});
+
+DOM.modalCloseBtn.addEventListener("click", () => {
+  DOM.helpModal.classList.remove("is-open");
+  DOM.helpModal.setAttribute("aria-hidden", "true");
+});
+
+DOM.helpModal.addEventListener("click", (event) => {
+  if (event.target === DOM.helpModal) {
+    DOM.helpModal.classList.remove("is-open");
+    DOM.helpModal.setAttribute("aria-hidden", "true");
+  }
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && DOM.helpModal.classList.contains("is-open")) {
+    DOM.helpModal.classList.remove("is-open");
+    DOM.helpModal.setAttribute("aria-hidden", "true");
+  }
+});
+
 // Search when button clicked
 DOM.searchBtn.addEventListener("click", (event) => {
   event.preventDefault();
@@ -96,6 +120,10 @@ DOM.searchBtn.addEventListener("click", (event) => {
 
 // Allow Enter key to search
 DOM.searchInput.addEventListener("keydown", (event) => {
+  if (DOM.helpModal.classList.contains("is-open")) {
+    return;
+  }
+
   if (event.key === "Enter") {
     event.preventDefault();
     DOM.searchBtn.click();
@@ -103,6 +131,10 @@ DOM.searchInput.addEventListener("keydown", (event) => {
 });
 
 DOM.guessInput.addEventListener("keydown", (event) => {
+  if (DOM.helpModal.classList.contains("is-open")) {
+    return;
+  }
+
   if (event.key === "Enter") {
     event.preventDefault();
     event.stopPropagation();
@@ -111,6 +143,10 @@ DOM.guessInput.addEventListener("keydown", (event) => {
 });
 
 document.addEventListener("keydown", (event) => {
+  if (DOM.helpModal.classList.contains("is-open")) {
+    return;
+  }
+
   if (
     event.key === "Enter" &&
     getComputedStyle(DOM.nextBtn).display !== "none" &&
