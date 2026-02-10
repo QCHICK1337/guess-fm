@@ -65,6 +65,11 @@ export function finalizeRoundScore(result) {
   const timeSinceRoundStart = (Date.now() - scoreState.roundStartTs) / 1000;
   const attemptsInCurrentRound = scoreState.attemptsInRound;
 
+  let streakForScore = scoreState.streak;
+  if (result === "correct") {
+    streakForScore = scoreState.streak + 1;
+  }
+
   let points;
   if (result === "skip") {
     points = -CONFIG.GAME.SCORING.SKIP_PENALTY;
@@ -74,7 +79,7 @@ export function finalizeRoundScore(result) {
       (CONFIG.GAME.SCORING.BASE_POINTS -
         CONFIG.GAME.SCORING.TIME_PENALTY * timeSinceRoundStart -
         CONFIG.GAME.SCORING.ATTEMPT_PENALTY * (attemptsInCurrentRound - 1)) *
-        (1 + CONFIG.GAME.SCORING.STREAK_MULTIPLIER * scoreState.streak),
+        (1 + CONFIG.GAME.SCORING.STREAK_MULTIPLIER * streakForScore),
     );
   }
 
