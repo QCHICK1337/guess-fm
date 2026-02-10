@@ -5,6 +5,11 @@ export const DOM = {
   endGameScreen: document.getElementById("end-game-screen"),
   audioContainer: document.querySelector(".audio-container"),
 
+  // Help Modal
+  helpBtn: document.getElementById("help-btn"),
+  helpModal: document.getElementById("help-modal"),
+  modalCloseBtn: document.getElementById("modal-close-btn"),
+
   // Search/Input
   searchInput: document.getElementById("artist-input"),
   searchBtn: document.getElementById("search-btn"),
