@@ -19,6 +19,9 @@
   --space-md: 0.9375rem; /* 15px */
   --space-lg: 1.5rem; /* 24px */
   --space-xl: 2rem; /* 32px */
+  --space-2xl: 3rem; /* 48px */
+  --space-input: 0.75rem; /* 12px */
+  --space-icon: 0.1875rem; /* 3px */
 
   /* Border Radius */
   --radius-default: 12px;
@@ -27,6 +30,7 @@
   --font-family-base: "Open Sans", sans-serif;
   --font-size-base: 1rem;
   --font-size-sm: 0.85rem;
+  --letter-spacing-tight: 0.5px;
 
   /* Transitions */
   --transition-fast: 0.2s ease;
@@ -35,6 +39,11 @@
   /* Layout */
   --container-max-width: 700px;
   --container-width-mobile: 95%;
+  --layout-main-offset: 10vh;
+  --size-control: 2.5rem; /* 40px */
+  --size-album-max: 22.5rem; /* 360px */
+  --size-modal-max: 25rem; /* 400px */
+  --breakpoint-sm: 32.5rem; /* 520px */
 }
 
 /* ========================================
@@ -78,7 +87,7 @@ p {
 
 /* Icon Spacing */
 i {
-  margin-right: 3px;
+  margin-right: var(--space-icon);
 }
 
 /* ========================================
@@ -105,7 +114,7 @@ header {
 .header__right {
   grid-column: 3;
   justify-self: end;
-  width: 40px;
+  width: var(--size-control);
 }
 
 .brand {
@@ -118,15 +127,10 @@ header {
   display: block;
 }
 
-.brand h1 {
-  margin: 0;
-  line-height: 1.2;
-}
-
 main {
   width: 100%;
   max-width: min(var(--container-width-mobile), var(--container-max-width));
-  margin-top: 10vh;
+  margin-top: var(--layout-main-offset);
   margin-bottom: auto;
   padding: var(--space-lg);
   background-color: var(--color-surface);
@@ -140,7 +144,7 @@ main {
 
 footer {
   margin-top: var(--space-xl);
-  padding-bottom: 1rem;
+  padding-bottom: var(--font-size-base);
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
 }
@@ -160,7 +164,7 @@ footer a:hover {
 
 input,
 button {
-  padding: 12px;
+  padding: var(--space-input);
   font-size: var(--font-size-base);
   border-radius: var(--radius-default);
   text-align: center;
@@ -172,12 +176,15 @@ input {
   background-color: var(--color-background);
   color: var(--color-text-primary);
   border: 1px solid var(--color-border);
-  transition: outline var(--transition-fast);
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
 }
 
 input:focus {
-  outline: 1px solid var(--color-primary);
-  outline-offset: 0;
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 1px var(--color-primary);
 }
 
 /* Button Base Styles */
@@ -212,8 +219,8 @@ button:disabled {
 
 .help-btn {
   margin-right: var(--space-sm);
-  width: 40px;
-  height: 40px;
+  width: var(--size-control);
+  height: var(--size-control);
   border-radius: 50%;
   display: grid;
   place-items: center;
@@ -233,7 +240,6 @@ button:disabled {
 }
 
 .help-btn:hover i {
-  background-color: transparent;
   color: var(--color-primary-hover);
 }
 
@@ -285,9 +291,9 @@ button:disabled {
 /* Points Notification */
 .points-notification {
   position: absolute;
-  top: -30px;
+  top: 0;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate(-50%, -30px);
   font-size: 1.5rem;
   font-weight: 700;
   opacity: 0;
@@ -295,12 +301,12 @@ button:disabled {
   white-space: nowrap;
   transition:
     opacity 0.3s ease,
-    top 0.5s ease;
+    transform 0.5s ease;
 }
 
 .points-notification.show {
   opacity: 1;
-  top: -40px;
+  transform: translate(-50%, -40px);
 }
 
 .points-notification.positive {
@@ -315,7 +321,7 @@ button:disabled {
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: var(--letter-spacing-tight);
 }
 
 .score-value {
@@ -327,7 +333,7 @@ button:disabled {
 /* Album Artwork */
 #album-art {
   width: 60%;
-  max-width: 360px;
+  max-width: var(--size-album-max);
   margin: 0 auto;
   border-radius: var(--radius-default);
   display: block;
@@ -353,7 +359,7 @@ button:disabled {
 
 /* Song Information */
 #song-title {
-  margin-bottom: 3em;
+  margin-bottom: var(--space-2xl);
 }
 
 /* Artist Header Icon */
@@ -387,7 +393,7 @@ button:disabled {
   padding: var(--space-lg);
   border-radius: var(--radius-default);
   border: 1px solid var(--color-border);
-  max-width: 400px;
+  max-width: var(--size-modal-max);
   width: 90%;
   text-align: center;
 }
@@ -435,7 +441,7 @@ button:disabled {
 }
 
 /* Mobile layout tweaks to stop the Skip button wrapping */
-@media (max-width: 520px) {
+@media (max-width: var(--breakpoint-sm)) {
   .audio-container {
     flex-direction: column;
     align-items: stretch;
