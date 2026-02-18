@@ -54,23 +54,47 @@
         aria-modal="true"
         aria-labelledby="modal-title"
       >
-        <h2 id="modal-title">How to Play</h2>
-        <p>
-          Welcome to Guess FM! Test your music knowledge by following these
-          steps:
-        </p>
-        <ol>
-          <li>Search for an artist using the search bar.</li>
-          <li>Listen to the audio snippet of a song by that artist.</li>
-          <li>Type your guess for the song title and submit it.</li>
+        <div class="modal-header">
+          <h2 id="modal-title">How to Play</h2>
+          <p class="modal-lead">
+            A music quiz. Listen, guess, and build a streak.
+          </p>
+        </div>
+        <ol class="modal-steps">
           <li>
-            Earn points for correct answers and try to maintain your streak!
+            <span class="step-icon"
+              ><i class="fa-solid fa-magnifying-glass"></i
+            ></span>
+            Search an artist.
           </li>
           <li>
-            Skip songs if you're stuck, but be careful - it may affect your
-            score!
+            <span class="step-icon"
+              ><i class="fa-solid fa-headphones"></i
+            ></span>
+            Listen to the 30-second preview.
+          </li>
+          <li>
+            <span class="step-icon"><i class="fa-solid fa-keyboard"></i></span>
+            Type the track title and submit.
+          </li>
+          <li>
+            <span class="step-icon"><i class="fa-solid fa-fire"></i></span>
+            Keep your streak going for bonus points.
           </li>
         </ol>
+        <div class="modal-meta">
+          <div class="modal-card">
+            <h3>Scoring</h3>
+            <p>Base 100 minus time and wrong guesses. Streak adds a bonus.</p>
+          </div>
+          <div class="modal-card">
+            <h3>Tips</h3>
+            <ul class="modal-tips">
+              <li>Press <kbd>Enter</kbd> to submit quickly.</li>
+              <li>Skipping costs points and resets your streak.</li>
+            </ul>
+          </div>
+        </div>
         <button
           class="close-btn"
           id="modal-close-btn"
@@ -119,7 +143,7 @@
         <input
           id="artist-input"
           type="text"
-          placeholder="Enter artist name"
+          placeholder="Enter artist name (e.g. The Weeknd)"
           aria-label="Artist Name"
           required
         />
