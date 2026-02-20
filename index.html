@@ -41,7 +41,7 @@
       <!-- Help Button -->
       <div class="header__right">
         <button class="help-btn" id="help-btn" aria-label="Help">
-          <i class="fa-solid fa-circle-question"></i>
+          <i class="fa-solid fa-circle-question" aria-hidden="true"></i>
         </button>
       </div>
     </header>
@@ -100,7 +100,7 @@
           id="modal-close-btn"
           aria-label="Close Help Modal"
         >
-          <i class="fa-solid fa-xmark"></i>Close
+          <i class="fa-solid fa-xmark" aria-hidden="true"></i>Close
         </button>
       </div>
     </div>
@@ -112,19 +112,19 @@
         <div class="score-item">
           <div id="points-notification" class="points-notification"></div>
           <span class="score-label"
-            ><i class="fa-solid fa-star"></i>Score:</span
+            ><i class="fa-solid fa-star" aria-hidden="true"></i>Score:</span
           >
           <span id="score-total" class="score-value">0</span>
         </div>
         <div class="score-item">
           <span class="score-label"
-            ><i class="fa-solid fa-fire"></i>Streak:</span
+            ><i class="fa-solid fa-fire" aria-hidden="true"></i>Streak:</span
           >
           <span id="score-streak" class="score-value">0</span>
         </div>
         <div class="score-item">
           <span class="score-label"
-            ><i class="fa-solid fa-repeat"></i>Round:</span
+            ><i class="fa-solid fa-repeat" aria-hidden="true"></i>Round:</span
           >
           <span id="score-rounds" class="score-value">0</span>
         </div>
@@ -148,7 +148,12 @@
           required
         />
         <button id="search-btn" type="button">
-          <i class="fa-solid fa-magnifying-glass" id="search-icon"></i>Search
+          <i
+            class="fa-solid fa-magnifying-glass"
+            id="search-icon"
+            aria-hidden="true"
+          ></i
+          >Search
         </button>
         <p
           id="status-msg"
@@ -161,7 +166,7 @@
       <!-- Game Interface -->
       <div id="game-container" class="control-container">
         <h3 id="current-artist-header">
-          <i class="fa-solid fa-chart-simple fa-beat"></i>
+          <i class="fa-solid fa-chart-simple fa-beat" aria-hidden="true"></i>
           <span id="artist-name"></span>
         </h3>
 
@@ -169,7 +174,7 @@
         <div class="audio-container">
           <audio id="audio-player" controls></audio>
           <button id="skip-btn" class="btn-secondary" type="button">
-            <i class="fa-solid fa-angles-right"></i>Skip Song
+            <i class="fa-solid fa-angles-right" aria-hidden="true"></i>Skip Song
           </button>
         </div>
 
@@ -186,7 +191,7 @@
         <!-- Game Action Buttons -->
         <div class="button-container">
           <button id="submit-btn" type="button">
-            <i class="fa-solid fa-check"></i>Submit Guess
+            <i class="fa-solid fa-check" aria-hidden="true"></i>Submit Guess
           </button>
         </div>
 
@@ -220,7 +225,7 @@
 
         <!-- Next Button -->
         <button id="next-btn" type="button">
-          <i class="fa-solid fa-angles-right"></i>Next song
+          <i class="fa-solid fa-angles-right" aria-hidden="true"></i>Next song
         </button>
       </div>
     </main>
@@ -233,7 +238,7 @@
           href="https://github.com/QCHICK1337"
           target="_blank"
           rel="noopener noreferrer"
-          ><i class="fa-brands fa-github"></i>GitHub</a
+          ><i class="fa-brands fa-github" aria-hidden="true"></i>GitHub</a
         >
       </p>
     </footer>
