@@ -92,6 +92,24 @@ i {
   margin-right: var(--space-icon);
 }
 
+.skip-link {
+  position: absolute;
+  top: -2.5rem;
+  left: var(--space-sm);
+  z-index: 1000;
+  padding: var(--space-xs) var(--space-sm);
+  color: var(--color-text-primary);
+  background-color: var(--color-surface-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-default);
+  text-decoration: none;
+  transition: top var(--transition-fast);
+}
+
+.skip-link:focus {
+  top: var(--space-sm);
+}
+
 /* ========================================
    LAYOUT
    ======================================== */
