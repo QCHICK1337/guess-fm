@@ -11,6 +11,7 @@ export const DOM = {
   modalCloseBtn: document.getElementById("modal-close-btn"),
 
   // Search/Input
+  searchForm: document.getElementById("search-container"),
   searchInput: document.getElementById("artist-input"),
   searchBtn: document.getElementById("search-btn"),
   statusMsg: document.getElementById("status-msg"),

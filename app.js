@@ -112,22 +112,10 @@ document.addEventListener("keydown", (event) => {
   }
 });
 
-// Search when button clicked
-DOM.searchBtn.addEventListener("click", (event) => {
+// Search when form submitted
+DOM.searchForm.addEventListener("submit", (event) => {
   event.preventDefault();
   loadArtistAndStartGame(DOM.searchInput.value);
-});
-
-// Allow Enter key to search
-DOM.searchInput.addEventListener("keydown", (event) => {
-  if (DOM.helpModal.classList.contains("is-open")) {
-    return;
-  }
-
-  if (event.key === "Enter") {
-    event.preventDefault();
-    DOM.searchBtn.click();
-  }
 });
 
 DOM.guessInput.addEventListener("keydown", (event) => {
