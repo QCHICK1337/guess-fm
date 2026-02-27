@@ -142,11 +142,11 @@
 
       <!-- Artist Search Form -->
       <form id="search-container" class="control-container">
+        <label class="visually-hidden" for="artist-input">Artist name</label>
         <input
           id="artist-input"
           type="text"
           placeholder="Enter artist name (e.g. The Weeknd)"
-          aria-label="Artist Name"
           required
         />
         <button id="search-btn" type="submit">
@@ -181,11 +181,13 @@
         </div>
 
         <!-- Song Guess Input -->
+        <label class="visually-hidden" for="guess-input"
+          >Song title guess</label
+        >
         <input
           id="guess-input"
           type="text"
           placeholder="Guess the song..."
-          aria-label="Song Title Guess"
           list="song-suggestions"
         />
         <datalist id="song-suggestions"></datalist>
