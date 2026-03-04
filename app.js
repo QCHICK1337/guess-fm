@@ -41,6 +41,15 @@ const audioPlayer = new Plyr(DOM.audioPlayer, {
 
 audioPlayer.volume = CONFIG.AUDIO_PLAYER.VOLUME;
 
+function setFeedbackMessage(message, statusType = "") {
+  DOM.feedbackDisplay.classList.remove("is-success", "is-info", "is-error");
+  DOM.feedbackDisplay.textContent = message;
+
+  if (statusType) {
+    DOM.feedbackDisplay.classList.add(`is-${statusType}`);
+  }
+}
+
 /* ========================================
    GAME INITIALIZATION
    ======================================== */
@@ -155,7 +164,7 @@ DOM.submitBtn.addEventListener("click", () => {
   const userGuess = DOM.guessInput.value;
 
   if (userGuess.trim() === "") {
-    DOM.feedbackDisplay.textContent = CONFIG.MESSAGES.EMPTY_GUESS;
+    setFeedbackMessage(CONFIG.MESSAGES.EMPTY_GUESS, "error");
     return;
   }
 
@@ -167,13 +176,12 @@ DOM.submitBtn.addEventListener("click", () => {
     // Only show results if game hasn't ended
     if (scoreState.rounds <= scoreState.maxRounds) {
       showPointsUpdate(Math.round(points));
-      DOM.feedbackDisplay.textContent = CONFIG.MESSAGES.CORRECT;
-      DOM.feedbackDisplay.classList.add("is-success");
+      setFeedbackMessage(CONFIG.MESSAGES.CORRECT, "success");
       showConfetti();
       showResultsUI(gameState.currentSong);
     }
   } else {
-    DOM.feedbackDisplay.textContent = CONFIG.MESSAGES.INCORRECT;
+    setFeedbackMessage(CONFIG.MESSAGES.INCORRECT, "error");
   }
 });
 
@@ -196,7 +204,7 @@ DOM.skipBtn.addEventListener("click", () => {
     return;
   }
 
-  DOM.feedbackDisplay.textContent = "";
+  setFeedbackMessage("");
   const points = finalizeRoundScore("skip");
   showPointsUpdate(Math.round(points));
 
@@ -204,8 +212,7 @@ DOM.skipBtn.addEventListener("click", () => {
     audioPlayer.pause();
     showEndGameScreen(scoreState);
   } else {
-    DOM.feedbackDisplay.textContent = CONFIG.MESSAGES.SONG_REVEAL;
-    DOM.feedbackDisplay.classList.add("is-info");
+    setFeedbackMessage(CONFIG.MESSAGES.SONG_REVEAL, "info");
     showResultsUI(gameState.currentSong);
   }
 });
