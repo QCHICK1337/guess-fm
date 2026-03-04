@@ -112,6 +112,9 @@ export function finalizeRoundScore(result) {
 export function renderScoreboard() {
   DOM.scoreTotal.textContent = Math.round(scoreState.total);
   DOM.scoreStreak.textContent = scoreState.streak;
+  DOM.scoreStreak
+    .closest(".score-item")
+    ?.classList.toggle("is-streak-active", scoreState.streak > 0);
   DOM.scoreRounds.innerHTML = `<span>${scoreState.rounds}</span><span class="text-secondary"> / ${scoreState.maxRounds}</span>`;
 }
 
