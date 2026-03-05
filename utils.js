@@ -37,6 +37,7 @@ export function normalizeText(value) {
 
 export function resetSearchButton() {
   DOM.searchBtn.disabled = false;
+  DOM.searchBtn.removeAttribute("aria-busy");
   DOM.searchBtn.innerHTML =
     '<i class="fa-solid fa-magnifying-glass"></i>Search';
 }
@@ -59,5 +60,6 @@ export function showPointsUpdate(points) {
 
 export function setSearchButtonLoading() {
   DOM.searchBtn.disabled = true;
+  DOM.searchBtn.setAttribute("aria-busy", "true");
   DOM.searchBtn.innerHTML = '<i class="fa-solid fa-spinner"></i>Loading...';
 }
