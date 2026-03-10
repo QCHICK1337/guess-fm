@@ -198,12 +198,6 @@ DOM.nextBtn.addEventListener("click", () => {
 
 // Skip current song
 DOM.skipBtn.addEventListener("click", () => {
-  if (scoreState.rounds >= scoreState.maxRounds) {
-    audioPlayer.pause();
-    showEndGameScreen(scoreState);
-    return;
-  }
-
   setFeedbackMessage("");
   const points = finalizeRoundScore("skip");
   showPointsUpdate(Math.round(points));
