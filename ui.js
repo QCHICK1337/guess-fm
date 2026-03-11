@@ -105,6 +105,7 @@ export function showEndGameScreen(scoreState) {
 }
 
 export function showConfetti() {
+  if (typeof confetti !== "function") return;
   confetti({
     particleCount: CONFIG.CONFETTI.PARTICLE_COUNT,
     spread: CONFIG.CONFETTI.SPREAD,
