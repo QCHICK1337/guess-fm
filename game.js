@@ -23,6 +23,7 @@ export const scoreState = {
   streak: 0,
   bestStreak: 0,
   roundStartTs: 0,
+  roundLocked: false,
   attemptsInRound: 0,
   lastResult: null,
   history: [],
@@ -36,6 +37,7 @@ export const scoreState = {
     this.streak = 0;
     this.bestStreak = 0;
     this.roundStartTs = 0;
+    this.roundLocked = false;
     this.attemptsInRound = 0;
     this.lastResult = null;
     this.history = [];
@@ -47,6 +49,7 @@ export const scoreState = {
 export function startRoundScore(songId) {
   scoreState.rounds++;
   scoreState.roundStartTs = Date.now();
+  scoreState.roundLocked = false;
   scoreState.attemptsInRound = 0;
   scoreState.lastResult = null;
   scoreState.currentSongId = songId;
@@ -59,8 +62,14 @@ export function noteAttempt() {
 
 export function finalizeRoundScore(result) {
   if (scoreState.rounds > scoreState.maxRounds) {
-    return;
+    return null;
   }
+
+  if (scoreState.roundLocked) {
+    return null;
+  }
+
+  scoreState.roundLocked = true;
 
   const timeSinceRoundStart = (Date.now() - scoreState.roundStartTs) / 1000;
   const attemptsInCurrentRound = scoreState.attemptsInRound;

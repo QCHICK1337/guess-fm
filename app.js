@@ -41,6 +41,12 @@ const audioPlayer = new Plyr(DOM.audioPlayer, {
 
 audioPlayer.volume = CONFIG.AUDIO_PLAYER.VOLUME;
 
+function setRoundControlsEnabled(isEnabled) {
+  DOM.guessInput.disabled = !isEnabled;
+  DOM.submitBtn.disabled = !isEnabled;
+  DOM.skipBtn.disabled = !isEnabled;
+}
+
 function setFeedbackMessage(message, statusType = "") {
   DOM.feedbackDisplay.classList.remove("is-success", "is-info", "is-error");
   DOM.feedbackDisplay.textContent = message;
@@ -80,6 +86,7 @@ async function loadArtistAndStartGame(artistName) {
     );
     showGameScreens();
     showGameRoundUI();
+    setRoundControlsEnabled(true);
     setVisibility([DOM.audioContainer, DOM.scoreboard], "flex");
     setVisibility([DOM.artistHeader, DOM.statusMsg], "block");
     updateStatusMessage("", "");
@@ -173,6 +180,12 @@ DOM.submitBtn.addEventListener("click", () => {
   if (isGuessCorrect(userGuess, gameState.currentSong.trackName)) {
     const points = finalizeRoundScore("correct");
 
+    if (points === null) {
+      return;
+    }
+
+    setRoundControlsEnabled(false);
+
     // Only show results if game hasn't ended
     if (scoreState.rounds <= scoreState.maxRounds) {
       showPointsUpdate(Math.round(points));
@@ -192,6 +205,7 @@ DOM.nextBtn.addEventListener("click", () => {
     showEndGameScreen(scoreState);
   } else {
     showGameRoundUI();
+    setRoundControlsEnabled(true);
     playCurrentRound(audioPlayer);
   }
 });
@@ -200,6 +214,12 @@ DOM.nextBtn.addEventListener("click", () => {
 DOM.skipBtn.addEventListener("click", () => {
   setFeedbackMessage("");
   const points = finalizeRoundScore("skip");
+
+  if (points === null) {
+    return;
+  }
+
+  setRoundControlsEnabled(false);
   showPointsUpdate(Math.round(points));
 
   if (scoreState.rounds >= scoreState.maxRounds) {
@@ -216,6 +236,7 @@ DOM.newGameBtn.addEventListener("click", () => {
     showSearchScreen();
   } else {
     showGameRoundUI();
+    setRoundControlsEnabled(true);
     playCurrentRound(audioPlayer);
   }
 });
