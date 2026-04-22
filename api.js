@@ -71,8 +71,21 @@ function filterValidSongs(allTracks, artistName) {
     for (const keyword of CONFIG.FILTERS.EXCLUDED_KEYWORDS) {
       if (normalizedTrackName.includes(keyword)) return false;
     }
+    if (isLiveVersionTitle(track.trackName)) return false;
     if (normalizedTrackName.includes(normalizedArtistName)) return false;
 
     return true;
   });
+}
+
+function isLiveVersionTitle(trackName) {
+  const normalizedTitle = String(trackName || "").toLowerCase();
+
+  return (
+    /\(([^)]*\blive\b[^)]*)\)/i.test(normalizedTitle) ||
+    /\[([^\]]*\blive\b[^\]]*)\]/i.test(normalizedTitle) ||
+    /-\s*live\b/i.test(normalizedTitle) ||
+    /\blive\s+(at|from|in)\b/i.test(normalizedTitle) ||
+    /\blive\s+version\b/i.test(normalizedTitle)
+  );
 }

@@ -31,13 +31,13 @@ export const CONFIG = {
     SONG_REVEAL: "The song was:",
   },
   GAME: {
-    MAX_ROUNDS: 15,
+    MAX_ROUNDS: 10,
     NOTIFICATION_TIMEOUT: 2000,
     SCORING: {
       BASE_POINTS: 100,
       TIME_PENALTY: 2,
       ATTEMPT_PENALTY: 10,
-      SKIP_PENALTY: 30,
+      SKIP_PENALTY: 10,
       STREAK_MULTIPLIER: 0.1,
     },
   },
