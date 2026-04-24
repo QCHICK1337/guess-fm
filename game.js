@@ -7,12 +7,14 @@ export const gameState = {
   allSongs: [],
   playHistory: [],
   playQueue: [],
+  lastPlayedTitleNormalized: null,
 
   reset() {
     this.currentSong = null;
     this.allSongs = [];
     this.playHistory = [];
     this.playQueue = [];
+    this.lastPlayedTitleNormalized = null;
   },
 };
 
@@ -151,8 +153,31 @@ export function getUnplayedSong() {
     return;
   }
 
-  gameState.playHistory.push(nextSong.trackId);
-  return nextSong;
+  let selectedSong = nextSong;
+
+  if (
+    gameState.lastPlayedTitleNormalized &&
+    normalizeText(nextSong.trackName) === gameState.lastPlayedTitleNormalized &&
+    gameState.playQueue.length > 0
+  ) {
+    const alternativeSongIndex = gameState.playQueue.findIndex(
+      (song) =>
+        normalizeText(song.trackName) !== gameState.lastPlayedTitleNormalized,
+    );
+
+    if (alternativeSongIndex !== -1) {
+      const [alternativeSong] = gameState.playQueue.splice(
+        alternativeSongIndex,
+        1,
+      );
+      gameState.playQueue.push(nextSong);
+      selectedSong = alternativeSong;
+    }
+  }
+
+  gameState.playHistory.push(selectedSong.trackId);
+  gameState.lastPlayedTitleNormalized = normalizeText(selectedSong.trackName);
+  return selectedSong;
 }
 
 function shuffleArray(items) {
