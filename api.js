@@ -61,7 +61,7 @@ async function fetchJson(url) {
 function filterValidSongs(allTracks, artistName) {
   const normalizedArtistName = normalizeText(artistName);
 
-  return allTracks.filter((track) => {
+  const filteredTracks = allTracks.filter((track) => {
     // Must be a track and have preview URL
     if (track.wrapperType !== "track" || !track.previewUrl) return false;
 
@@ -76,6 +76,8 @@ function filterValidSongs(allTracks, artistName) {
 
     return true;
   });
+
+  return dedupeTracks(filteredTracks);
 }
 
 function isLiveVersionTitle(trackName) {
@@ -88,4 +90,31 @@ function isLiveVersionTitle(trackName) {
     /\blive\s+(at|from|in)\b/i.test(normalizedTitle) ||
     /\blive\s+version\b/i.test(normalizedTitle)
   );
+}
+
+function dedupeTracks(tracks) {
+  const seenTitles = new Set();
+  const seenPreviewUrls = new Set();
+  const uniqueTracks = [];
+
+  for (const track of tracks) {
+    const normalizedTrackName = normalizeText(track.trackName);
+    if (!normalizedTrackName) {
+      continue;
+    }
+
+    if (seenTitles.has(normalizedTrackName)) {
+      continue;
+    }
+
+    if (seenPreviewUrls.has(track.previewUrl)) {
+      continue;
+    }
+
+    seenTitles.add(normalizedTrackName);
+    seenPreviewUrls.add(track.previewUrl);
+    uniqueTracks.push(track);
+  }
+
+  return uniqueTracks;
 }
