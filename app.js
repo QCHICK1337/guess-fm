@@ -85,8 +85,8 @@ async function loadArtistAndStartGame(artistName) {
       "none",
     );
     showGameScreens();
-    showGameRoundUI();
     setRoundControlsEnabled(true);
+    showGameRoundUI();
     setVisibility([DOM.audioContainer, DOM.scoreboard], "flex");
     setVisibility([DOM.artistHeader, DOM.statusMsg], "block");
     updateStatusMessage("", "");
@@ -204,8 +204,8 @@ DOM.nextBtn.addEventListener("click", () => {
     audioPlayer.pause();
     showEndGameScreen(scoreState);
   } else {
-    showGameRoundUI();
     setRoundControlsEnabled(true);
+    showGameRoundUI();
     playCurrentRound(audioPlayer);
   }
 });
@@ -235,8 +235,8 @@ DOM.newGameBtn.addEventListener("click", () => {
   if (scoreState.rounds >= scoreState.maxRounds) {
     showSearchScreen();
   } else {
-    showGameRoundUI();
     setRoundControlsEnabled(true);
+    showGameRoundUI();
     playCurrentRound(audioPlayer);
   }
 });
