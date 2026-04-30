@@ -1,7 +1,7 @@
 import { CONFIG } from "./config.js";
 import { normalizeText } from "./utils.js";
 
-export async function searchAndLoadArtist(artistName) {
+export async function searchAndLoadArtist(artistName, options = {}) {
   if (artistName.trim() === "") {
     throw new Error(CONFIG.MESSAGES.ARTIST_REQUIRED);
   }
@@ -14,7 +14,7 @@ export async function searchAndLoadArtist(artistName) {
       CONFIG.ITUNES_API.ARTIST_SEARCH_LIMIT
     }`;
 
-    const artistData = await fetchJson(artistSearchUrl);
+    const artistData = await fetchJson(artistSearchUrl, options.signal);
 
     if (artistData.results.length === 0) {
       throw new Error(CONFIG.MESSAGES.ARTIST_NOT_FOUND);
@@ -24,7 +24,7 @@ export async function searchAndLoadArtist(artistName) {
 
     // Fetch all songs by the artist
     const songLookupUrl = `${CONFIG.ITUNES_API.BASE_URL}/lookup?id=${artist.artistId}&entity=song&limit=${CONFIG.ITUNES_API.SONG_LOOKUP_LIMIT}`;
-    const songsData = await fetchJson(songLookupUrl);
+    const songsData = await fetchJson(songLookupUrl, options.signal);
 
     // Filter and validate songs
     const songs = filterValidSongs(songsData.results, artist.artistName);
@@ -39,6 +39,10 @@ export async function searchAndLoadArtist(artistName) {
       songs,
     };
   } catch (error) {
+    if (error.name === "AbortError") {
+      throw error;
+    }
+
     if (
       error.message.includes(CONFIG.MESSAGES.ARTIST_REQUIRED) ||
       error.message.includes(CONFIG.MESSAGES.ARTIST_NOT_FOUND) ||
@@ -50,8 +54,8 @@ export async function searchAndLoadArtist(artistName) {
   }
 }
 
-async function fetchJson(url) {
-  const response = await fetch(url);
+async function fetchJson(url, signal) {
+  const response = await fetch(url, { signal });
   if (!response.ok) {
     throw new Error(`HTTP ${response.status}`);
   }

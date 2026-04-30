@@ -41,6 +41,9 @@ const audioPlayer = new Plyr(DOM.audioPlayer, {
 
 audioPlayer.volume = CONFIG.AUDIO_PLAYER.VOLUME;
 
+let activeSearchRequestId = 0;
+let activeSearchAbortController = null;
+
 function setRoundControlsEnabled(isEnabled) {
   DOM.guessInput.disabled = !isEnabled;
   DOM.submitBtn.disabled = !isEnabled;
@@ -61,6 +64,15 @@ function setFeedbackMessage(message, statusType = "") {
    ======================================== */
 
 async function loadArtistAndStartGame(artistName) {
+  activeSearchRequestId++;
+  const requestId = activeSearchRequestId;
+
+  if (activeSearchAbortController) {
+    activeSearchAbortController.abort();
+  }
+
+  activeSearchAbortController = new AbortController();
+
   gameState.reset();
   scoreState.reset();
   renderScoreboard();
@@ -68,7 +80,13 @@ async function loadArtistAndStartGame(artistName) {
   setSearchButtonLoading();
 
   try {
-    const result = await searchAndLoadArtist(artistName);
+    const result = await searchAndLoadArtist(artistName, {
+      signal: activeSearchAbortController.signal,
+    });
+
+    if (requestId !== activeSearchRequestId) {
+      return;
+    }
 
     scoreState.artistId = result.artistId;
     DOM.artistNameDisplay.textContent = result.artistName;
@@ -92,11 +110,22 @@ async function loadArtistAndStartGame(artistName) {
     updateStatusMessage("", "");
     playCurrentRound(audioPlayer);
     DOM.guessInput.focus();
-    resetSearchButton();
   } catch (error) {
+    if (error.name === "AbortError") {
+      return;
+    }
+
+    if (requestId !== activeSearchRequestId) {
+      return;
+    }
+
     console.error("Error loading artist:", error);
     updateStatusMessage(error.message, "error");
-    resetSearchButton();
+  } finally {
+    if (requestId === activeSearchRequestId) {
+      resetSearchButton();
+      activeSearchAbortController = null;
+    }
   }
 }
 
