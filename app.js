@@ -43,6 +43,7 @@ audioPlayer.volume = CONFIG.AUDIO_PLAYER.VOLUME;
 
 let activeSearchRequestId = 0;
 let activeSearchAbortController = null;
+let lastHelpTrigger = null;
 
 function setRoundControlsEnabled(isEnabled) {
   DOM.guessInput.disabled = !isEnabled;
@@ -57,6 +58,22 @@ function setFeedbackMessage(message, statusType = "") {
   if (statusType) {
     DOM.feedbackDisplay.classList.add(`is-${statusType}`);
   }
+}
+
+function openHelpModal(trigger = DOM.helpBtn) {
+  lastHelpTrigger = trigger;
+  DOM.helpModal.classList.add("is-open");
+  DOM.helpModal.setAttribute("aria-hidden", "false");
+  DOM.helpBtn.setAttribute("aria-expanded", "true");
+  DOM.modalCloseBtn.focus();
+}
+
+function closeHelpModal() {
+  DOM.helpModal.classList.remove("is-open");
+  DOM.helpModal.setAttribute("aria-hidden", "true");
+  DOM.helpBtn.setAttribute("aria-expanded", "false");
+  lastHelpTrigger?.focus();
+  lastHelpTrigger = null;
 }
 
 /* ========================================
@@ -134,26 +151,55 @@ async function loadArtistAndStartGame(artistName) {
    ======================================== */
 
 DOM.helpBtn.addEventListener("click", () => {
-  DOM.helpModal.classList.add("is-open");
-  DOM.helpModal.setAttribute("aria-hidden", "false");
+  openHelpModal(DOM.helpBtn);
 });
 
 DOM.modalCloseBtn.addEventListener("click", () => {
-  DOM.helpModal.classList.remove("is-open");
-  DOM.helpModal.setAttribute("aria-hidden", "true");
+  closeHelpModal();
 });
 
 DOM.helpModal.addEventListener("click", (event) => {
   if (event.target === DOM.helpModal) {
-    DOM.helpModal.classList.remove("is-open");
-    DOM.helpModal.setAttribute("aria-hidden", "true");
+    closeHelpModal();
   }
 });
 
 document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape" && DOM.helpModal.classList.contains("is-open")) {
-    DOM.helpModal.classList.remove("is-open");
-    DOM.helpModal.setAttribute("aria-hidden", "true");
+  if (!DOM.helpModal.classList.contains("is-open")) {
+    return;
+  }
+
+  if (event.key === "Escape") {
+    closeHelpModal();
+    return;
+  }
+
+  if (event.key === "Tab") {
+    const focusableElements = DOM.helpModal.querySelectorAll(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+    );
+    const focusableList = Array.from(focusableElements).filter(
+      (element) => !element.hasAttribute("disabled"),
+    );
+
+    if (focusableList.length === 0) {
+      event.preventDefault();
+      return;
+    }
+
+    const firstFocusable = focusableList[0];
+    const lastFocusable = focusableList[focusableList.length - 1];
+
+    if (event.shiftKey && document.activeElement === firstFocusable) {
+      event.preventDefault();
+      lastFocusable.focus();
+      return;
+    }
+
+    if (!event.shiftKey && document.activeElement === lastFocusable) {
+      event.preventDefault();
+      firstFocusable.focus();
+    }
   }
 });
 

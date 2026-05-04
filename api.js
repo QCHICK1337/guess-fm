@@ -76,7 +76,7 @@ function filterValidSongs(allTracks, artistName) {
       if (normalizedTrackName.includes(keyword)) return false;
     }
     if (isLiveVersionTitle(track.trackName)) return false;
-    if (normalizedTrackName.includes(normalizedArtistName)) return false;
+    if (normalizedTrackName === normalizedArtistName) return false;
 
     return true;
   });

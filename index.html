@@ -42,7 +42,14 @@
       </div>
       <!-- Help Button -->
       <div class="header__right">
-        <button class="help-btn" id="help-btn" type="button" aria-label="Help">
+        <button
+          class="help-btn"
+          id="help-btn"
+          type="button"
+          aria-label="Help"
+          aria-haspopup="dialog"
+          aria-expanded="false"
+        >
           <i class="fa-solid fa-circle-question" aria-hidden="true"></i>
         </button>
       </div>
@@ -87,7 +94,10 @@
         <div class="modal-meta">
           <div class="modal-card">
             <h3>Scoring</h3>
-            <p>Base 100 minus time and wrong guesses. Streak adds a bonus.</p>
+            <p>
+              Base 100 minus time and wrong guesses. Skip costs 10 points.
+              Streak adds a bonus.
+            </p>
           </div>
           <div class="modal-card">
             <h3>Tips</h3>

@@ -34,7 +34,7 @@ Your score is calculated based on multiple factors:
 - **Time Penalty:** -2 points per second (faster guesses = higher score)
 - **Attempt Penalty:** -10 points for each wrong guess beyond the first
 - **Streak Bonus:** +10% multiplier for each consecutive correct answer
-- **Skip Penalty:** -30 points for skipping a song (resets your streak)
+- **Skip Penalty:** -10 points for skipping a song (resets your streak)
 
 **Formula:** `Score = max(0, (100 - 2×Time - 10×(Attempts-1)) × (1 + 0.1×Streak))`
 
