@@ -407,7 +407,11 @@ button:disabled {
   align-items: center;
   gap: var(--space-xl);
   padding: var(--space-xl) var(--space-lg);
-  background: linear-gradient(135deg, var(--color-surface-elevated) 0%, var(--color-surface) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--color-surface-elevated) 0%,
+    var(--color-surface) 100%
+  );
   border: 1px solid var(--color-border);
   border-radius: var(--radius-default);
   animation: end-game-fade-in 0.5s ease;
