@@ -222,19 +222,25 @@
         <p id="song-artist" class="text-secondary"></p>
         <p id="song-title"></p>
 
-        <section id="end-game-screen">
+        <section id="end-game-screen" class="end-game-card">
           <h2>Final Results</h2>
-          <div class="score-item">
-            <span class="score-label">Final Score:</span>
-            <span id="final-score" class="score-value">0</span>
+          <div class="end-game-score-display">
+            <div class="score-badge">
+              <span class="score-label">Score</span>
+              <span id="final-score" class="score-display">0</span>
+            </div>
           </div>
-          <div class="score-item">
-            <span class="score-label">Best Streak:</span>
-            <span id="final-streak" class="score-value">0</span>
-          </div>
-          <div class="score-item">
-            <span class="score-label">Rounds Played:</span>
-            <span id="final-rounds" class="score-value">0</span>
+          <div class="end-game-stats">
+            <div class="stat-item">
+              <span class="stat-icon"><i class="fa-solid fa-fire" aria-hidden="true"></i></span>
+              <span class="stat-label">Best Streak</span>
+              <span id="final-streak" class="stat-value">0</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-icon"><i class="fa-solid fa-repeat" aria-hidden="true"></i></span>
+              <span class="stat-label">Rounds</span>
+              <span id="final-rounds" class="stat-value">0</span>
+            </div>
           </div>
           <button id="new-game-btn" type="button">Play Again</button>
         </section>
